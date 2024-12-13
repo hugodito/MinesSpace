@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Présentation du Site</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- Bandeau supérieur -->
+  <header>
+    <img src="images/logo.png" alt="Logo du Site" class="logo">
+  </header>
+
+  <!-- Contenu principal -->
+  <main>
+    <section class="presentation">
+      <h1>Présentation du Site</h1>
+      <p>Bienvenue sur notre site ! Voici les informations principales...</p>
+    </section>
+
+    <section class="actualites">
+      <h2>Actualités</h2>
+      <p>Retrouvez ici toutes les dernières actualités.</p>
+      <a href="actualites.html">Voir les actualités</a>
+    </section>
+  </main>
+
+  <!-- Bandeau inférieur -->
+  <footer>
+    <nav>
+      <ul>
+        <li><a href="index.html">Accueil</a></li>
+        <li><a href="contact.html">Contact</a></li>
+        <li><a href="qui-sommes-nous.html">Qui sommes-nous ?</a></li>
+      </ul>
+    </nav>
+    <div class="contact">
+      <p>Contactez-nous : contact@exemple.com</p>
+      <div class="social-icons">
+        <a href="https://instagram.com" class="icon">Instagram</a>
+        <a href="https://linkedin.com" class="icon">LinkedIn</a>
+      </div>
+    </div>
+  </footer>
+</body>
+</html>

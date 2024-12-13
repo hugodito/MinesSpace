@@ -1,16 +1,13 @@
 {
-  "name": "backend",
+  "name": "backend_microcontroller",
   "version": "1.0.0",
-  "description": "Backend pour gérer les données d'un microcontrôleur avec SQLite",
+  "description": "Backend pour récupérer et gérer les données des microcontrôleurs.",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/hugodito/MinesSpace.git"
-  },
-  "private": true,
+  "author": "MinesSpace",
+  "license": "MIT",
   "dependencies": {
     "body-parser": "^1.20.2",
     "cors": "^2.8.5",

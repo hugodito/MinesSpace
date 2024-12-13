@@ -1,0 +1,20 @@
+{
+  "name": "minesspace",
+  "version": "1.0.0",
+  "description": "Projet global pour MinesSpace.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node backend/server.js",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\"",
+    "backend": "cd backend && npm start",
+    "frontend": "cd frontend && npm start"
+  },
+  "author": "MinesSpace",
+  "dependencies": {
+    "concurrently": "^8.2.0"
+  },
+  "workspaces": [
+    "backend",
+    "frontend"
+  ]
+}

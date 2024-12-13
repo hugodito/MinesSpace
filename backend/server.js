@@ -2,6 +2,7 @@ const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
 const sensorDataModel = require('./models/sensorData'); // Import du modèle
+const path = require('path');
 
 // Initialisation de l'application
 const app = express();
@@ -34,7 +35,12 @@ app.get('/api/data', async (req, res) => {
     }
 });
 
+// Route pour servir index.html situé dans MinesSpace
+app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, '../html/index.html'));
+});
+
 // Démarrage du serveur
 app.listen(PORT, () => {
-    console.log(`Serveur démarré sur le port ${PORT}`);
+    console.log(`Serveur démarré sur http://localhost:${PORT}`);
 });

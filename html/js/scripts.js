@@ -6,6 +6,12 @@ function toggleMenu() {
     }
 }
 
+// Ajout de l'événement au bouton du menu
+const menuButton = document.getElementById('menu-button');
+if (menuButton) {
+    menuButton.addEventListener('click', toggleMenu); // Lien entre le bouton et la fonction toggleMenu
+}
+
 // Gestion du bouton Live
 const live = false; // Changez ici pour TRUE ou FALSE
 const liveButton = document.getElementById('live-button');
@@ -22,10 +28,4 @@ if (liveButton) {
     liveButton.addEventListener('click', function() {
         window.location.href = 'live.html';  // Redirection vers la page live.html
     });
-}
-
-// Ajout de l'événement au bouton du menu
-const menuButton = document.getElementById('menu-button');
-if (menuButton) {
-    menuButton.addEventListener('click', toggleMenu); // Lien entre le bouton et la fonction toggleMenu
 }

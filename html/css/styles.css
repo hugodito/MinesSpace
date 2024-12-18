@@ -26,6 +26,48 @@ body {
     font-family: Arial, sans-serif;
 }
 
+/* Login form styles */
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    max-width: 400px;
+    margin: 0 auto; /* Center the form */
+    padding: 20px;
+    background: #f9f9f9; /* Light background for contrast */
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for the form */
+}
+
+form label {
+    font-weight: bold;
+}
+
+form input {
+    width: 100%;
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-sizing: border-box;
+}
+
+form button {
+    background-color: #47453f;
+    color: white;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-weight: bold;
+}
+
+form button:hover {
+    background-color: #2b2136;
+}
+
+
 /* Styles pour le bouton hamburger */
 .hamburger-menu {
     background: none;
@@ -223,3 +265,4 @@ form input, form textarea, form button {
         margin-left: auto; /* Centrer le bouton hamburger */
     }
 }
+

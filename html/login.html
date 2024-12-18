@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live</title>
+    <title>Connexion</title>
     <link rel="stylesheet" href="css/styles.css">
     <script src="js/scripts.js" defer></script>
-
     <link rel="icon" type="image/png" href="images/favicon.png">
 </head>
 <body>
@@ -16,36 +15,43 @@
             <a href="index.html">
                 <img src="images/navbar-logo.svg" alt="Logo" class="logo">
             </a>
-    
+
             <!-- Conteneur pour le bouton Live et le menu -->
             <div class="menu-bar">
                 <!-- Bouton Live -->
                 <button id="live-button" onclick="window.location.href='live.html'">
                     Live
                 </button>
-    
+
                 <!-- Menu Hamburger (trois barres) -->
                 <button class="hamburger-menu" id="hamburger-menu" onclick="toggleMenu()">
                     <div class="bar"></div>
                     <div class="bar"></div>
                     <div class="bar"></div>
                 </button>
-    
+
                 <!-- Menu déroulant -->
                 <div id="menu-items" class="menu-items">
                     <a href="projects.html">Nos Projets</a>
                     <a href="about.html">À Propos</a>
-                    <a href="contact.html">Contact</a>
-                    <a href="login.html">Login</a>
-                </div
+                    <a href="login.html">Connexion</a>
+                </div>
             </div>
         </div>
     </header>
 
     <main>
         <div class="container">
-            <h1>Page Live</h1>
-            <p>Bienvenue sur la page Live. Suivez nos mises à jour en temps réel ici.</p>
+            <h1>Connexion</h1>
+            <form id="login-form">
+                <label for="username">Nom d'utilisateur :</label>
+                <input type="text" id="username" name="username" placeholder="Votre nom d'utilisateur" required>
+
+                <label for="password">Mot de passe :</label>
+                <input type="password" id="password" name="password" placeholder="Votre mot de passe" required>
+
+                <button type="submit">Se connecter</button>
+            </form>
         </div>
     </main>
 

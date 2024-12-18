@@ -4,34 +4,50 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Accueil</title>
-    <link rel="stylesheet" href="styles.css">
-    <script src="scripts.js" defer></script> <!-- Lien vers le fichier JavaScript externe -->
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="js/scripts.js" defer></script>
+    <link rel="icon" type="image/png" href="images/favicon.png">
 </head>
 <body>
-    <div class="wrapper">
-        <header>
-            <div class="header-container">
-                <img src="html/images/navbar-logo.svg" alt="Logo" class="logo">
-                <div class="menu-bar">
-                    <button id="live-button">Live •</button>
-                    <div class="menu">
-                        <button id="menu-button">Menu</button> <!-- Bouton Menu -->
-                        <div class="menu-items">
-                            <a href="projects.html">Nos Projets</a>
-                            <a href="about.html">À Propos</a>
-                        </div>
-                    </div>
-                </div>
+  <header>
+    <div class="header-container">
+        <!-- Logo cliquable qui mène à la page d'accueil -->
+        <a href="index.html">
+            <img src="images/navbar-logo.svg" alt="Logo" class="logo">
+        </a>
+
+        <!-- Conteneur pour le bouton Live et le menu -->
+        <div class="menu-bar">
+            <!-- Bouton Live -->
+            <button id="live-button" onclick="window.location.href='live.html'">
+                Live
+            </button>
+
+            <!-- Menu Hamburger (trois barres) -->
+            <button class="hamburger-menu" id="hamburger-menu" onclick="toggleMenu()">
+                <div class="bar"></div>
+                <div class="bar"></div>
+                <div class="bar"></div>
+            </button>
+
+            <!-- Menu déroulant -->
+            <div id="menu-items" class="menu-items">
+                <a href="projects.html">Nos Projets</a>
+                <a href="about.html">À Propos</a>
             </div>
-        </header>
-        <main>
-            <div class="container">
-                <h1>Bienvenue sur notre site !</h1>
-                <p>Voici la page d'accueil de notre site. Nous vous invitons à explorer nos projets et à en savoir plus sur nous.</p>
-                <!-- Vous pouvez ajouter plus de contenu ici selon vos besoins -->
-            </div>
-        </main>
+        </div>
     </div>
+</header>
+
+
+
+    <main>
+        <div class="container">
+            <h1>Bienvenue sur notre site !</h1>
+            <p>Voici la page d'accueil de notre site. Nous vous invitons à explorer nos projets et à en savoir plus sur nous.</p>
+        </div>
+    </main>
+
     <footer>
         <div class="container">
             <p>Contact: contact@example.com</p>

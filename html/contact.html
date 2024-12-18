@@ -4,17 +4,25 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Contact</title>
-    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="styles.css"> <!-- Lien vers le fichier CSS -->
+    <script src="js/scripts.js" defer></script> <!-- Lien vers le fichier JS -->
 </head>
 <body>
     <div class="wrapper">
+        <!-- Header -->
         <header>
             <div class="header-container">
-                <img src="images/navbar-logo.svg" alt="Logo" class="logo">
+                <a href="index.html">
+                    <img src="images/navbar-logo.svg" alt="Logo" class="logo" width="400" height="100">
+                </a>
                 <div class="menu-bar">
                     <button id="live-button">Live •</button>
                     <div class="menu">
-                        <button onclick="toggleMenu()">Menu</button>
+                        <button id="menu-button" class="hamburger-menu">
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                            <div class="bar"></div>
+                        </button>
                         <div class="menu-items">
                             <a href="projects.html">Nos Projets</a>
                             <a href="about.html">À Propos</a>
@@ -23,50 +31,40 @@
                 </div>
             </div>
         </header>
+
+        <!-- Contenu principal -->
         <main>
             <div class="container">
                 <h1>Contactez-nous</h1>
-                <form action="#" method="post">
-                    <label for="name">Nom :</label>
-                    <input type="text" id="name" name="name" required>
-                    
-                    <label for="email">Email :</label>
-                    <input type="email" id="email" name="email" required>
-                    
-                    <label for="message">Message :</label>
-                    <textarea id="message" name="message" required></textarea>
-                    
-                    <button type="submit">Envoyer</button>
+                <form class="contact-form">
+                    <div class="form-group">
+                        <label for="name">Nom :</label>
+                        <input type="text" id="name" name="name" placeholder="Votre nom" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="email">Email :</label>
+                        <input type="email" id="email" name="email" placeholder="Votre email" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="message">Message :</label>
+                        <textarea id="message" name="message" placeholder="Votre message" required></textarea>
+                    </div>
+                    <button type="submit" class="submit-button">Envoyer</button>
                 </form>
             </div>
         </main>
     </div>
+
+    <!-- Footer -->
     <footer>
         <div class="container">
             <p>Contact: contact@example.com</p>
             <p>
                 <a href="about.html">À Propos</a> | 
-                <a href="index.html">Accueil</a> | 
-                <a href="projects.html">Nos Projets</a>
+                <a href="projects.html">Nos Projets</a> | 
+                <a href="contact.html">Contact</a>
             </p>
         </div>
     </footer>
-    <script>
-        // Gestion du menu déroulant
-        function toggleMenu() {
-            document.querySelector('.menu-items').classList.toggle('visible');
-        }
-
-        // Gestion du bouton Live
-        const live = false; // Changez ici pour TRUE ou FALSE
-        const liveButton = document.getElementById('live-button');
-        if (live) {
-            liveButton.style.color = 'white';
-            liveButton.style.backgroundColor = '#47453f';
-        } else {
-            liveButton.style.color = '#f20a29';
-            liveButton.style.backgroundColor = '#d4abb1';
-        }
-    </script>
 </body>
 </html>

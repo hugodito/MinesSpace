@@ -1,3 +1,4 @@
+/* Mise en forme générale */
 html, body {
     margin: 0;
     padding: 0;
@@ -6,27 +7,49 @@ html, body {
     flex-direction: column;
 }
 
+/* Conteneur principal */
 .wrapper {
     flex: 1; /* Permet de remplir tout l'espace disponible */
     display: flex;
     flex-direction: column;
 }
 
+/* Conteneur pour les sections de la page */
 .container {
     max-width: 1080px; /* Limite la largeur à 1080px */
     margin: 0 auto; /* Centre horizontalement le contenu */
     padding: 20px; /* Ajoute de l'espace autour du contenu */
 }
 
+/* Corps de la page */
 body {
-    margin: 0;
     font-family: Arial, sans-serif;
 }
 
-header, main, footer {
-    width: 100%;
+/* Styles pour le bouton hamburger */
+.hamburger-menu {
+    background: none;
+    border: none;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between; /* Espace uniforme entre les barres */
+    width: 30px;
+    height: 25px; /* Hauteur totale du bouton */
+    cursor: pointer;
 }
 
+.hamburger-menu .bar {
+    width: 30px;       /* Largeur des barres */
+    height: 5px;       /* Hauteur des barres */
+    background-color: #fff;
+    border-radius: 3px;
+}
+
+.hamburger-menu:hover .bar {
+    background-color: #f20a29; /* Change la couleur des barres au survol */
+}
+
+/* En-tête (header) */
 header {
     background-color: #47453f;
     color: white;
@@ -34,6 +57,7 @@ header {
     display: flex;
     justify-content: center;
     align-items: center;
+    width: 100%;
 }
 
 .header-container {
@@ -45,11 +69,14 @@ header {
     padding: 0 20px;
 }
 
+/* Logo dans l'en-tête */
 header .logo {
-    height: 40px;
+    width: 400px; /* Largeur de l'image */
+    height: 100px; /* Hauteur de l'image */
+    object-fit: contain; /* Évite que l'image soit déformée */
 }
 
-
+/* Menu dans l'en-tête */
 header nav a {
     color: white;
     margin: 0 10px;
@@ -73,13 +100,15 @@ header .menu-items.visible {
     display: block;
 }
 
-main {
-    flex: 1;
-    padding: 20px;
-}
-
 .menu {
     position: relative;
+    display: flex;
+    align-items: center;
+}
+
+.menu-bar {
+    display: flex; /* Utiliser Flexbox pour l'alignement horizontal */
+    align-items: center; /* Aligner verticalement au centre */
 }
 
 .menu button {
@@ -90,29 +119,6 @@ main {
     font-size: 16px;
     cursor: pointer;
     border-radius: 5px;
-}
-
-header {
-    background-color: #47453f;
-    color: white;
-    padding: 10px 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.header-container {
-    max-width: 1200px; /* Largeur maximale pour le header */
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 0 20px;
-}
-
-/* Logo */
-header .logo {
-    height: 40px;
 }
 
 /* Bouton Live */
@@ -122,46 +128,17 @@ header .logo {
     font-size: 16px;
     cursor: pointer;
     border-radius: 5px;
+    margin-right: 10px;
     font-weight: bold;
 }
 
-/* Menu déroulant */
-.menu {
-    position: relative;
+/* Contenu principal */
+main {
+    flex: 1;
+    padding: 20px;
 }
 
-.menu button {
-    background: none;
-    border: 1px solid white;
-    color: white;
-    padding: 10px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-}
-
-.menu-items {
-    display: none;
-    position: absolute;
-    right: 0;
-    background-color: #47453f;
-    border: 1px solid white;
-    padding: 10px;
-    border-radius: 5px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-}
-
-.menu-items.visible {
-    display: block;
-}
-
-.menu-items a {
-    color: white;
-    text-decoration: none;
-    display: block;
-    margin: 5px 0;
-}
-
+/* Conteneur d'actualités */
 .news-container {
     display: flex;
     gap: 20px;
@@ -177,6 +154,7 @@ header .logo {
     height: auto;
 }
 
+/* Conteneur des projets */
 .projects-container {
     display: flex;
     flex-direction: column;
@@ -197,15 +175,17 @@ header .logo {
     flex-direction: row-reverse;
 }
 
+/* Footer */
 footer {
     background-color: #2b2136;
     color: white;
     text-align: center;
     padding: 10px 20px;
     font-size: 12px;
-    position: relative; /* Défaut pour éviter tout chevauchement si non nécessaire */
+    position: relative;
 }
 
+/* Formulaire de contact */
 form {
     display: flex;
     flex-direction: column;
@@ -222,12 +202,24 @@ form input, form textarea, form button {
     font-size: 16px;
 }
 
+/* Styles responsives */
+@media (max-width: 768px) {
+    .menu-items {
+        position: static;
+        width: 100%;
+    }
 
-#live-button {
-    border: none;
-    padding: 10px 20px;
-    font-size: 16px;
-    cursor: pointer;
-    border-radius: 5px;
-    font-weight: bold;
+    .header-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    header .menu {
+        margin-top: 10px;
+    }
+
+    .hamburger-menu {
+        display: block;
+        margin-left: auto; /* Centrer le bouton hamburger */
+    }
 }

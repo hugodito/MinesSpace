@@ -11,7 +11,8 @@
   },
   "author": "MinesSpace",
   "dependencies": {
-    "concurrently": "^8.2.0"
+    "concurrently": "^8.2.0",
+    "sqlite3": "^5.1.7"
   },
   "workspaces": [
     "backend",

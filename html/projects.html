@@ -11,22 +11,32 @@
 <body>
     <header>
         <div class="header-container">
+            <!-- Logo cliquable qui mène à la page d'accueil -->
             <a href="index.html">
-                <img src="images/navbar-logo.svg" alt="Logo" class="logo" width="400" height="100">
+                <img src="images/navbar-logo.svg" alt="Logo" class="logo">
             </a>
+    
+            <!-- Conteneur pour le bouton Live et le menu -->
             <div class="menu-bar">
-                <button id="live-button">Live •</button>
-                <div class="menu">
-                    <button id="menu-button" class="hamburger-menu">
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                        <div class="bar"></div>
-                    </button>
-                    <div class="menu-items">
-                        <a href="projects.html">Nos Projets</a>
-                        <a href="about.html">À Propos</a>
-                    </div>
-                </div>
+                <!-- Bouton Live -->
+                <button id="live-button" onclick="window.location.href='live.html'">
+                    Live
+                </button>
+    
+                <!-- Menu Hamburger (trois barres) -->
+                <button class="hamburger-menu" id="hamburger-menu" onclick="toggleMenu()">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </button>
+    
+                <!-- Menu déroulant -->
+                <div id="menu-items" class="menu-items">
+                    <a href="projects.html">Nos Projets</a>
+                    <a href="about.html">À Propos</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="login.html">Login</a>
+                </div
             </div>
         </div>
     </header>

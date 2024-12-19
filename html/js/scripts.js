@@ -6,6 +6,12 @@ function toggleMenu() {
     }
 }
 
+// Ajout de l'événement au bouton du menu
+const menuButton = document.getElementById('menu-button');
+if (menuButton) {
+    menuButton.addEventListener('click', toggleMenu); // Lien entre le bouton et la fonction toggleMenu
+}
+
 // Gestion du bouton Live
 const live = false; // Changez ici pour TRUE ou FALSE
 const liveButton = document.getElementById('live-button');
@@ -24,8 +30,70 @@ if (liveButton) {
     });
 }
 
-// Ajout de l'événement au bouton du menu
-const menuButton = document.getElementById('menu-button');
-if (menuButton) {
-    menuButton.addEventListener('click', toggleMenu); // Lien entre le bouton et la fonction toggleMenu
+// Gestion du formulaire
+document.addEventListener("DOMContentLoaded", function() {
+    const loginForm = document.getElementById("login-form");
+
+    if (loginForm) { // Vérifie si le formulaire existe avant d'ajouter l'écouteur
+        loginForm.addEventListener("submit", async function(event) {
+            event.preventDefault();
+
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+
+            try {
+                // Chargement des utilisateurs depuis users.json
+                const response = await fetch("resources/users.json");
+                const users = await response.json();
+
+                // Vérification des identifiants
+                const user = users.find(user => user.username === username && user.password === password);
+
+                if (user) {
+                    alert("Connexion réussie !");
+                    window.location.href = "index.html"; // Redirection après succès
+                    localStorage.setItem('user', username);  // Stocker le nom d'utilisateur dans localStorage
+                } else {
+                    alert("Nom d'utilisateur ou mot de passe incorrect !");
+                }
+            } catch (error) {
+                console.error("Erreur lors de la vérification des utilisateurs :", error);
+                alert("Impossible de vérifier les identifiants. Veuillez réessayer plus tard.");
+            }
+        });
+    }
+});
+
+document.addEventListener('DOMContentLoaded', () => {
+    // Vérifier si l'utilisateur est connecté
+    const user = localStorage.getItem('user');  // Vérifier si l'utilisateur est stocké dans le localStorage
+
+    // Mettre à jour l'interface en fonction de l'état de la connexion
+    if (user) {
+        // Si l'utilisateur est connecté, afficher le bouton "Se déconnecter"
+        document.getElementById('login-logout-button').textContent = 'Se déconnecter';
+        document.getElementById('login-logout-button').onclick = logout; // Définir la fonction logout
+    } else {
+        // Si l'utilisateur n'est pas connecté, afficher le bouton "Login"
+        document.getElementById('login-logout-button').textContent = 'Login';
+        document.getElementById('login-logout-button').onclick = login; // Définir la fonction login
+    }
+});
+
+// Fonction pour gérer la déconnexion
+function logout() {
+    // Retirer les informations d'utilisateur du localStorage
+    localStorage.removeItem('user');
+
+    // Afficher un message de confirmation
+    alert('Vous êtes déconnecté');
+
+    // Rediriger vers la page d'accueil
+    window.location.href = 'index.html';
+}
+
+// Fonction pour gérer la connexion
+function login() {
+    // Rediriger l'utilisateur vers la page de connexion
+    window.location.href = 'login.html';
 }

@@ -32,7 +32,25 @@ function getAllData() {
     });
 }
 
+// Fonction pour supprimer une donnée par ID
+function deleteData(id) {
+    return new Promise((resolve, reject) => {
+        const query = 'DELETE FROM sensor_data WHERE id = ?';
+        db.run(query, [id], function (err) {
+            if (err) {
+                console.error('Erreur lors de la suppression des données :', err.message);
+                reject(err);
+            } else {
+                resolve(this.changes);  // Retourne le nombre de lignes supprimées
+            }
+        });
+    });
+}
+
 module.exports = {
     insertData,
     getAllData,
+    deleteData,  // Ajouter la fonction deleteData
 };
+
+

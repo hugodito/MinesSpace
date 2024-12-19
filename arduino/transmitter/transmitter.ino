@@ -1,12 +1,13 @@
 #include <Wire.h>
 #include <Adafruit_BMP280.h>
-#include <MPU6050.h>
+#include <Adafruit_MPU6050.h>
+#include <Adafruit_Sensor.h>
 #include <SPI.h>
 #include <LoRa.h>
 
 // Objets pour capteurs
 Adafruit_BMP280 bmp;  // Objet pour BMP280
-MPU6050 mpu(Wire);    // Objet pour MPU6050
+Adafruit_MPU6050 mpu;    // Objet pour MPU6050
 
 // Pins SPI pour LoRa
 #define LORA_SCK 18
@@ -18,15 +19,24 @@ MPU6050 mpu(Wire);    // Objet pour MPU6050
 #define BAND 915E6  // Fréquence LoRa (modifiez selon votre région)
 #define PAS 1000
 
+//initialisation des variables
+unsigned long temps1 = 0;
+
 // Initialisation
 void setup() {
+  
   Serial.begin(9600);
   Wire.begin(21, 22);  // Configurer SDA et SCL pour ESP32
 
-  // Initialisation MPU6050
+  // Initialiser le MPU6050
   Serial.println("Initialisation du MPU6050...");
-  mpu.begin();
-  mpu.calcGyroOffsets(true);  // Calibrer le gyroscope
+  if (!mpu.begin()) {
+    Serial.println("Échec de l'initialisation du MPU6050 !");
+    while (1);
+  }
+  Serial.println("MPU6050 initialisé !");
+
+  Serial.println("MPU6050 initialisé !");
 
   // Initialisation BMP280
   Serial.println("Initialisation du BMP280...");
@@ -54,13 +64,16 @@ void setup() {
 
 void loop() {
 
-  if ((millis()-temps1)>= PAS){
+  if ((millis()- temps1) >= PAS){
     temps1 = millis();
   // Lire les données du MPU6050
-  mpu.update();
-  float accelX = mpu.getAccX();
-  float accelY = mpu.getAccY();
-  float accelZ = mpu.getAccZ();
+   sensors_event_t accel;
+    mpu.getAccelerometerSensor()->getEvent(&accel);
+
+    float accelX = accel.acceleration.x;  // Accélération en m/s²
+    float accelY = accel.acceleration.y;
+    float accelZ = accel.acceleration.z;
+
 
   // Lire les données du BMP280
   float temperature = bmp.readTemperature();

@@ -1,8 +1,8 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const sensorDataModel = require('./models/sensorData'); // Import du modèle
 const path = require('path');
+const sensorDataModel = require('./models/sensorData');
 
 // Initialisation de l'application
 const app = express();
@@ -13,7 +13,7 @@ app.use(bodyParser.json());
 app.use(cors());
 
 // Middleware pour servir les fichiers statiques depuis 'html'
-app.use(express.static(path.join(__dirname, '../html'))); // Cela servira tout le contenu du dossier html
+app.use(express.static(path.join(__dirname, '../html'))); // Cela permet de servir les fichiers CSS, JS, images, etc.
 
 // Route POST : Enregistrer des données
 app.post('/api/data', async (req, res) => {
@@ -38,6 +38,7 @@ app.get('/api/data', async (req, res) => {
     }
 });
 
+
 // Route pour servir index.html
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, '../html/index.html'));
@@ -46,4 +47,10 @@ app.get('/', (req, res) => {
 // Démarrage du serveur
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);
+});
+
+sensorDataModel.insertData(22.5, 1013, 0.98, 15, 150).then((id) => {
+    console.log(`Données insérées avec l'ID ${id}`);
+}).catch((err) => {
+    console.error('Erreur lors de l’insertion des données factices :', err);
 });

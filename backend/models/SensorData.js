@@ -1,31 +1,38 @@
 const db = require('../db');
 
 // Fonction pour insérer des données
-const insertData = (temperature, pression) => {
+function insertData(temperature, pression, acceleration, vitesse, altitude) {
     return new Promise((resolve, reject) => {
-        const query = `INSERT INTO sensor_data (temperature, pression) VALUES (?, ?)`;
-        db.run(query, [temperature, pression], function (err) {
+        const query = `
+            INSERT INTO sensor_data (temperature, pression, acceleration, vitesse, altitude, timestamp)
+            VALUES (?, ?, ?, ?, ?, ?)
+        `;
+        db.run(query, [temperature, pression, acceleration, vitesse, altitude, Date.now()], function (err) {
             if (err) {
+                console.error('Erreur lors de l’insertion des données :', err.message);
                 reject(err);
             } else {
-                resolve(this.lastID); // Renvoie l'ID de la ligne insérée
+                resolve(this.lastID);
             }
         });
     });
-};
+}
 
 // Fonction pour récupérer toutes les données
-const getAllData = () => {
+function getAllData() {
     return new Promise((resolve, reject) => {
-        const query = `SELECT * FROM sensor_data ORDER BY timestamp DESC`;
-        db.all(query, [], (err, rows) => {
+        db.all('SELECT * FROM sensor_data ORDER BY timestamp DESC', [], (err, rows) => {
             if (err) {
+                console.error('Erreur lors de la récupération des données :', err.message);
                 reject(err);
             } else {
                 resolve(rows);
             }
         });
     });
-};
+}
 
-module.exports = { insertData, getAllData };
+module.exports = {
+    insertData,
+    getAllData,
+};

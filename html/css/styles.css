@@ -9,16 +9,16 @@ html, body {
 
 /* Conteneur principal */
 .wrapper {
-    flex: 1; /* Permet de remplir tout l'espace disponible */
+    flex: 1;
     display: flex;
     flex-direction: column;
 }
 
 /* Conteneur pour les sections de la page */
 .container {
-    max-width: 1080px; /* Limite la largeur à 1080px */
-    margin: 0 auto; /* Centre horizontalement le contenu */
-    padding: 20px; /* Ajoute de l'espace autour du contenu */
+    max-width: 1080px;
+    margin: 0 auto;
+    padding: 20px;
 }
 
 /* Corps de la page */
@@ -32,11 +32,11 @@ form {
     flex-direction: column;
     gap: 20px;
     max-width: 400px;
-    margin: 0 auto; /* Center the form */
+    margin: 0 auto;
     padding: 20px;
-    background: #f9f9f9; /* Light background for contrast */
+    background: #f9f9f9;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for the form */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
 }
 
 form label {
@@ -67,28 +67,27 @@ form button:hover {
     background-color: #2b2136;
 }
 
-
 /* Styles pour le bouton hamburger */
 .hamburger-menu {
     background: none;
     border: none;
     display: flex;
     flex-direction: column;
-    justify-content: space-between; /* Espace uniforme entre les barres */
+    justify-content: space-between;
     width: 30px;
-    height: 25px; /* Hauteur totale du bouton */
+    height: 25px;
     cursor: pointer;
 }
 
 .hamburger-menu .bar {
-    width: 30px;       /* Largeur des barres */
-    height: 5px;       /* Hauteur des barres */
+    width: 30px;
+    height: 5px;
     background-color: #fff;
     border-radius: 3px;
 }
 
 .hamburger-menu:hover .bar {
-    background-color: #f20a29; /* Change la couleur des barres au survol */
+    background-color: #f20a29;
 }
 
 /* En-tête (header) */
@@ -103,7 +102,7 @@ header {
 }
 
 .header-container {
-    max-width: 1200px; /* Largeur maximale pour le header */
+    max-width: 1200px;
     width: 100%;
     display: flex;
     justify-content: space-between;
@@ -111,14 +110,12 @@ header {
     padding: 0 20px;
 }
 
-/* Logo dans l'en-tête */
 header .logo {
-    width: 400px; /* Largeur de l'image */
-    height: 100px; /* Hauteur de l'image */
-    object-fit: contain; /* Évite que l'image soit déformée */
+    width: 400px;
+    height: 100px;
+    object-fit: contain;
 }
 
-/* Menu dans l'en-tête */
 header nav a {
     color: white;
     margin: 0 10px;
@@ -129,46 +126,42 @@ header .menu {
     position: relative;
 }
 
-/* Menu déroulant */
 header .menu-items {
-    display: none; /* Masqué par défaut */
-    position: absolute; /* Positionné par rapport au conteneur parent */
-    top: 50px; /* Aligner juste sous le bouton hamburger */
-    right: 10px; /* Décalage par rapport au bord droit */
-    background-color: #47453f; /* Fond similaire au header */
+    display: none;
+    position: absolute;
+    top: 50px;
+    right: 10px;
+    background-color: #47453f;
     padding: 10px;
     border: 1px solid white;
     border-radius: 5px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Ombre subtile */
-    z-index: 100; /* Toujours au-dessus des autres éléments */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 100;
 }
 
-/* Liens du menu */
 header .menu-items a {
-    display: block; /* Chaque lien occupe une ligne */
+    display: block;
     color: white;
     text-decoration: none;
-    padding: 10px 20px; /* Ajoute de l'espace interne */
+    padding: 10px 20px;
     font-size: 16px;
-    border-bottom: 1px solid white; /* Séparateur entre les liens */
+    border-bottom: 1px solid white;
 }
 
 header .menu-items a:last-child {
-    border-bottom: none; /* Supprime la bordure du dernier élément */
+    border-bottom: none;
 }
 
-/* Affichage du menu */
 header .menu-items.visible {
-    display: block; /* Rend le menu visible */
+    display: block;
 }
 
-/* Effets au survol */
 header .menu-items a:hover {
-    background-color: #2b2136; /* Fond plus sombre */
-    color: #f20a29; /* Couleur du texte */
+    background-color: #2b2136;
+    color: #f20a29;
 }
 
-
+/* Menu */
 .menu {
     position: relative;
     display: flex;
@@ -176,8 +169,8 @@ header .menu-items a:hover {
 }
 
 .menu-bar {
-    display: flex; /* Utiliser Flexbox pour l'alignement horizontal */
-    align-items: center; /* Aligner verticalement au centre */
+    display: flex;
+    align-items: center;
 }
 
 .menu button {
@@ -244,94 +237,30 @@ main {
     flex-direction: row-reverse;
 }
 
-/* Footer */
+/* Style du footer */
 footer {
-    background-color: #2b2136;
+    background-color: #47453f;
     color: white;
+    padding: 0; /* Réduit le padding pour un footer plus compact */
     text-align: center;
-    padding: 10px 20px;
-    font-size: 12px;
-    position: relative;
 }
 
-/* Formulaire de contact */
-form {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+footer .container{
+    padding : 10px 0;
 }
 
-form label {
-    font-weight: bold;
-}
-
-form input, form textarea, form button {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-}
-
-/* Styles responsives */
-@media (max-width: 768px) {
-    .menu-items {
-        position: static;
-        width: 100%;
-    }
-
-    .header-container {
-        flex-direction: column;
-        align-items: center;
-    }
-
-    header .menu {
-        margin-top: 10px;
-    }
-
-    .hamburger-menu {
-        display: block;
-        margin-left: auto; /* Centrer le bouton hamburger */
-    }
-}
-
-/* Style du message push */
-.push-message {
-    position: fixed;
-    top: 20px;
-    left: 50%;
-    transform: translateX(-50%);
-    background-color: #2b2136;
-    color: white;
-    padding: 15px 30px;
-    border-radius: 8px;
-    font-size: 16px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    z-index: 1000;
-    animation: fade-in 0.3s ease;
-}
-
-/* Animation pour le message push */
-@keyframes fade-in {
-    from {
-        opacity: 0;
-        transform: translateX(-50%) translateY(-20px);
-    }
-    to {
-        opacity: 1;
-        transform: translateX(-50%) translateY(0);
-    }
-}
-
-/* Styles pour le lien Login/Logout */
-#login-logout-button {
-    display: block;  /* Comme les autres liens */
-    color: white;
+footer a {
+    color: white    ;
     text-decoration: none;
-    padding: 10px 20px; /* Même padding que les autres éléments */
-    font-size: 16px;
-    border-bottom: 1px solid white; /* Séparateur similaire */
+    font-size: 14px; /* Réduit la taille de la police */
+    margin: 0 10px; /* Ajoute un peu d'espace entre les liens */
 }
 
-#login-logout-button:hover {
-    background-color: #2b2136; /* Fond au survol */
-    color: #f20a29; /* Couleur du texte au survol */
+footer a:hover {
+    background-color: #2b2136;
+    color: #f20a29;
+}
+
+footer p {
+    margin : 8px 0px;
 }

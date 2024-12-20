@@ -11,31 +11,20 @@
 <body>
     <header>
         <div class="header-container">
-            <!-- Logo cliquable qui mène à la page d'accueil -->
             <a href="index.html">
                 <img src="images/navbar-logo.svg" alt="Logo" class="logo">
             </a>
-
-            <!-- Conteneur pour le bouton Live et le menu -->
             <div class="menu-bar">
-                <!-- Bouton Live -->
-                <button id="live-button" onclick="window.location.href='live.html'">
-                    Live
-                </button>
-
-                <!-- Menu Hamburger (trois barres) -->
+                <button id="live-button" onclick="window.location.href='live.html'">Live</button>
                 <button class="hamburger-menu" id="hamburger-menu" onclick="toggleMenu()">
                     <div class="bar"></div>
                     <div class="bar"></div>
                     <div class="bar"></div>
                 </button>
-
-                <!-- Menu déroulant -->
                 <div id="menu-items" class="menu-items">
                     <a href="projects.html">Nos Projets</a>
                     <a href="about.html">À Propos</a>
                     <a href="contact.html">Contact</a>
-                    <!-- Bouton dynamique Login / Logout -->
                     <a href="#" id="login-logout-button">Login</a>
                 </div>
             </div>
@@ -51,7 +40,6 @@
 
     <footer>
         <div class="container">
-            <p>Contact: contact@example.com</p>
             <p>
                 <a href="about.html">À Propos</a> | 
                 <a href="projects.html">Nos Projets</a> | 

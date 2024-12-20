@@ -1,3 +1,6 @@
+
+///////////////Gestion des outils du HEADER////////////////////////////////////
+
 // Fonction pour afficher/masquer le menu déroulant
 function toggleMenu() {
     const menu = document.querySelector('.menu-items');
@@ -30,6 +33,8 @@ if (liveButton) {
     });
 }
 
+
+////////////////////////// GESTION DU LOGIN 
 // Gestion du formulaire
 document.addEventListener("DOMContentLoaded", function() {
     const loginForm = document.getElementById("login-form");

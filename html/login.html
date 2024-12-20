@@ -9,6 +9,18 @@
     <link rel="icon" type="image/png" href="images/favicon.png">
 </head>
 <body>
+
+    <!--
+    <script>
+        // Vérifier si l'utilisateur est déjà connecté
+        document.addEventListener("DOMContentLoaded", function() {
+            if (localStorage.getItem("username")) {
+                // Si l'utilisateur est connecté, rediriger vers la page d'accueil
+                window.location.href = "index.html";
+            }
+        });
+    </script> -->
+
     <header>
         <div class="header-container">
             <!-- Logo cliquable qui mène à la page d'accueil -->
@@ -35,7 +47,7 @@
                     <a href="projects.html">Nos Projets</a>
                     <a href="about.html">À Propos</a>
                     <a href="contact.html">Contact</a>
-                    <a href="login.html">Login</a>
+                    <a href="#" id="login-logout-button">Login</a>
                 </div>
             </div>
         </div>
@@ -58,7 +70,6 @@
 
     <footer>
         <div class="container">
-            <p>Contact: contact@example.com</p>
             <p>
                 <a href="about.html">À Propos</a> | 
                 <a href="projects.html">Nos Projets</a> | 

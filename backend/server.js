@@ -41,13 +41,21 @@ async function addFakeData() {
 
 // Route POST : Enregistrer des données
 app.post('/api/data', async (req, res) => {
-    const { temperature, pression, acceleration, vitesse, altitude, launch_id } = req.body;
     try {
-        const result = await sensorDataModel.insertData(temperature, pression, acceleration, vitesse, altitude, launch_id);
-        res.status(201).json({ message: 'Données enregistrées avec succès.', id: result });
+        const { temperature, pression, acceleration, vitesse, altitude } = req.body;
+
+        // Vérification des données reçues
+        if (!temperature || !pression || !acceleration || !vitesse || !altitude) {
+            return res.status(400).send({ error: "Données incomplètes" });
+        }
+
+        // Insérer les données dans la base SQLite
+        const id = await insertData(temperature, pression, acceleration, vitesse, altitude, 1); // 1 correspond à un launch_id fictif
+        res.status(201).send({ success: true, id });
+
     } catch (error) {
         console.error('Erreur lors de l’insertion des données :', error);
-        res.status(500).json({ message: 'Erreur serveur.' });
+        res.status(500).send({ error: "Erreur serveur" });
     }
 });
 

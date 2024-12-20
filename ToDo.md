@@ -11,3 +11,11 @@ Programmation Web :
 
 Programmation Mobile :
 - Idem que Web mais en Kotlin et présentation différente, adaptée au format mobile
+
+pour lancer le serveur (il faut être dans le dossier MinesSpace) soit : 
+#1 :
+npm install (si pas déjà fait)
+npm start
+
+ou #2 :
+node backend/server.js

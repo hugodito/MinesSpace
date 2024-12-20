@@ -12,8 +12,6 @@ const db = new sqlite3.Database(path.join(__dirname, 'sensors.db'), (err) => {
 module.exports = db;
 db.serialize(() => {
     db.run(`
-        ALTER TABLE sensor_data ADD COLUMN launch_id INTEGER;
-
         CREATE TABLE IF NOT EXISTS sensor_data (
                                                    id INTEGER PRIMARY KEY AUTOINCREMENT,
                                                    temperature REAL,

@@ -1,9 +1,9 @@
-// Fonction pour charger les données des capteurs
-async function loadSensorData() {
-    const tableBody = document.querySelector('#sensor-table tbody');
+// Fonction pour charger les données des capteurs par lancer
+async function loadSensorDataByLaunch(launchId) {
+    const tableBody = document.querySelector(`#sensor-table-${launchId} tbody`);
 
     try {
-        const response = await fetch('/api/data');
+        const response = await fetch(`/api/data/${launchId}`);
         const data = await response.json();
 
         if (Array.isArray(data)) {
@@ -31,5 +31,43 @@ async function loadSensorData() {
     }
 }
 
-// Charger les données au démarrage
-document.addEventListener('DOMContentLoaded', loadSensorData);
+// Fonction pour afficher plusieurs tableaux pour différents lancers
+async function loadAllLaunchData() {
+    // Pour chaque lancer, crée un tableau et charge ses données
+    const launchIds = [1, 2, 3];  // Exemple de liste d'IDs de lancers (tu devrais la récupérer dynamiquement)
+    launchIds.forEach((launchId) => {
+        const tableContainer = document.createElement('div');
+        tableContainer.classList.add('launch-table-container');
+
+        const tableTitle = document.createElement('h3');
+        tableTitle.textContent = `Lancer ${launchId}`;
+
+        const table = document.createElement('table');
+        table.id = `sensor-table-${launchId}`;
+        table.innerHTML = `
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Température</th>
+                    <th>Pression</th>
+                    <th>Accélération</th>
+                    <th>Vitesse</th>
+                    <th>Altitude</th>
+                    <th>Temps</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        `;
+
+        tableContainer.appendChild(tableTitle);
+        tableContainer.appendChild(table);
+        document.querySelector('#launch-data-container').appendChild(tableContainer);
+
+        // Charge les données pour ce lancer
+        loadSensorDataByLaunch(launchId);
+    });
+}
+
+// Charger les données pour tous les lancers au démarrage
+document.addEventListener('DOMContentLoaded', loadAllLaunchData);

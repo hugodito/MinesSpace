@@ -42,15 +42,31 @@ async function addFakeData() {
 // Route POST : Enregistrer des données
 app.post('/api/data', async (req, res) => {
     try {
-        const { temperature, pression, acceleration, vitesse, altitude } = req.body;
+        const { temperature, pression, acceleration, vitesse, altitude, launch_id } = req.body;
 
         // Vérification des données reçues
-        if (!temperature || !pression || !acceleration || !vitesse || !altitude) {
-            return res.status(400).send({ error: "Données incomplètes" });
+        if (
+            temperature === undefined || pression === undefined ||
+            acceleration === undefined || vitesse === undefined ||
+            altitude === undefined || launch_id === undefined
+        ) {
+            console.log("Données reçues incomplètes ou invalides :", req.body);
+            return res.status(400).send({ error: "Données incomplètes ou au mauvais format" });
+        }
+
+        // Vérification des types de données
+        if (
+            typeof temperature !== 'number' || typeof pression !== 'number' ||
+            typeof acceleration !== 'number' || typeof vitesse !== 'number' ||
+            typeof altitude !== 'number' || typeof launch_id !== 'number'
+        ) {
+            console.log("Données avec des types invalides :", req.body);
+            return res.status(400).send({ error: "Types de données incorrects" });
         }
 
         // Insérer les données dans la base SQLite
-        const id = await insertData(temperature, pression, acceleration, vitesse, altitude, 1); // 1 correspond à un launch_id fictif
+        const id = await sensorDataModel.insertData(temperature, pression, acceleration, vitesse, altitude, launch_id);
+        console.log("Données insérées avec succès, ID :", id);
         res.status(201).send({ success: true, id });
 
     } catch (error) {

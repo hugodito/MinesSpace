@@ -6,7 +6,7 @@ Programmation Embarquée :
     
 Programmation Web :
 - Backend : Récupère les données du récepteur, les stocke dans un API et les publie sur un site (pas celui de MinesSpace)
-- Frontend avec Live, historique, A propos, Actus, Contact
+- Frontend avec Live, historique, A propos, Actus, Contact ### penser vueJS cf mail Quentin Richaud###
 - Courbes de l'accélération, vitesse, altitude, orientation se trace en direct puis stockées en historique
 
 Programmation Mobile :
@@ -19,3 +19,6 @@ npm start
 
 ou #2 :
 node backend/server.js
+
+
+mettre le bon port USB dans ArduinoSerialReader (au lieu de COM3)

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>À Propos</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/scripts.js" defer></script>
+  <link rel="icon" type="image/png" href="images/favicon.png">
+</head>
+<body>
+<header>
+  <div class="header-container">
+    <!-- Logo cliquable qui mène à la page d'accueil -->
+    <a href="index.html">
+      <img src="images/navbar-logo.svg" alt="Logo" class="logo">
+    </a>
+
+    <!-- Conteneur pour le bouton Live et le menu -->
+    <div class="menu-bar">
+      <!-- Bouton Live -->
+      <button id="live-button" onclick="window.location.href='live.html'">
+        Live
+      </button>
+
+      <!-- Menu Hamburger (trois barres) -->
+      <button class="hamburger-menu" id="hamburger-menu" onclick="toggleMenu()">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </button>
+
+      <!-- Menu déroulant -->
+      <div id="menu-items" class="menu-items">
+        <a href="projects.html">Nos Projets</a>
+        <a href="about.html">À Propos</a>
+        <a href="contact.html">Contact</a>
+        <a href="#" id="login-logout-button">Login</a>
+      </div>
+    </div>
+  </div>
+</header>
+
+<main>
+  <div class="container">
+    <h1>À Propos de nous</h1>
+    <p>Mines Space, c'est l'histoire de 6 étudiants passionnés d'aérospatial ayant décidé de se rassembler pour réaliser un projet commun : lancer une fusée au C'Space, la campagne de lancement annuelle organisée par le CNES. Aujourd'hui, l'association comporte 9 membres répartis en 3 projets.</p>
+
+    <div class="about-2blocs">
+      <div class="about-bloc">
+        <h3 class="about-sous-titre">Etudiants passionnés</h3>
+        <p>Notre association rassemble des élèves issus de différentes filières de l'école : Ingénieur Civil des Mines, Ingénieur Systèmes Électroniques Embarqués, Ingénieur Valorisation Énergétique et Ingénieur Génie Industriel. Elle a pour mission de mettre à disposition des étudiants les ressources humaines et techniques nécessaires pour mener à bien leurs projets aérospatiaux.</p>
+      </div>
+
+      <div class="about-bloc">
+        <h3 class="about-sous-titre">Nos partenaires</h3>
+        <p>Pour réaliser nos projets, nous avons accès aux équipements du Fablab de l'EMSE : impression 3D, découpe laser ou encore divers équipements d'usinage. De plus, nous avons la chance de pouvoir compter sur nos partenaires. Grâce à leur participation financière, ou à la fourniture de matériel et composants de qualité, nous pouvons accroître l'envergure de nos projets.</p>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  <div class="container">
+    <p>
+      <a href="about.html">À Propos</a> |
+      <a href="projects.html">Nos Projets</a> |
+      <a href="contact.html">Contact</a>
+    </p>
+  </div>
+</footer>
+</body>
+</html>

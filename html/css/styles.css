@@ -194,6 +194,28 @@ header .menu-items a:hover {
     font-weight: bold;
 }
 
+/* Bouton Live clignotant */
+#live-button.blinking {
+    background-color: #f44336 !important;
+    color: white !important;
+    animation: blink 1s infinite;  /* Ajout de l'animation de clignotement */
+}
+
+
+/* Animation de clignotement */
+@keyframes blink {
+    0% {
+        opacity: 1;
+    }
+    50% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+
 /* Contenu principal */
 main {
     flex: 1;

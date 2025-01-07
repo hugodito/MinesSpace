@@ -1,5 +1,8 @@
 import com.fazecast.jSerialComm.SerialPort;
+import com.fazecast.jSerialComm.SerialPortDataListener;
+import com.fazecast.jSerialComm.SerialPortEvent;
 import org.json.JSONObject;
+
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.OutputStream;
@@ -7,77 +10,105 @@ import java.io.OutputStream;
 public class ArduinoSerialReader {
 
     public static void main(String[] args) {
-        // Remplace "COM3" par le port série de ton ESP32
-        SerialPort comPort = SerialPort.getCommPort("COM3");
-        comPort.setBaudRate(115200); // Assure-toi que cela correspond à la configuration de ton ESP32
+        SerialPort comPort = SerialPort.getCommPort("COM8");
+        comPort.setBaudRate(9600);
 
         if (comPort.openPort()) {
-            System.out.println("Port ouvert avec succès.");
+            System.out.println("Port série ouvert avec succès.");
         } else {
-            System.out.println("Échec de l'ouverture du port.");
+            System.out.println("Échec de l'ouverture du port série.");
             return;
         }
 
-        comPort.addDataListener(event -> {
-            if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE) return;
+        StringBuilder dataBuffer = new StringBuilder();
 
-            byte[] newData = new byte[comPort.bytesAvailable()];
-            int numRead = comPort.readBytes(newData, newData.length);
-            String receivedData = new String(newData, 0, numRead);
-            System.out.println("Données reçues : " + receivedData);
+        comPort.addDataListener(new SerialPortDataListener() {
+            @Override
+            public int getListeningEvents() {
+                return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
+            }
 
-            // Parsing du JSON reçu
-            try {
-                // Conversion des données reçues en objet JSON
-                JSONObject jsonReceived = new JSONObject(receivedData);
-                int temperature = jsonReceived.getInt("temperature");
-                double pression = jsonReceived.getDouble("pression");
-                double acceleration = jsonReceived.getDouble("acceleration");
-                int vitesse = jsonReceived.getInt("vitesse");
-                int altitude = jsonReceived.getInt("altitude");
-                long timestamp = jsonReceived.getLong("timestamp");
-                int launchId = jsonReceived.getInt("launch_id");
+            @Override
+            public void serialEvent(SerialPortEvent event) {
+                if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE) return;
 
-                // Construire la nouvelle requête JSON pour l'API Node.js
-                String jsonData = new JSONObject()
-                        .put("temperature", temperature)
-                        .put("pression", pression)
-                        .put("acceleration", acceleration)
-                        .put("vitesse", vitesse)
-                        .put("altitude", altitude)
-                        .put("timestamp", timestamp)
-                        .put("launch_id", launchId)
-                        .toString();
+                byte[] newData = new byte[comPort.bytesAvailable()];
+                comPort.readBytes(newData, newData.length);
+                dataBuffer.append(new String(newData));
 
-                // Envoi des données au serveur Node.js via une requête POST
-                URL url = new URL("http://localhost:3000/api/data");
-                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-                conn.setRequestMethod("POST");
-                conn.setRequestProperty("Content-Type", "application/json");
-                conn.setDoOutput(true);
+                // Vérifier si le buffer contient un JSON complet
+                String rawData = dataBuffer.toString();
+                int startIndex = rawData.indexOf('{'); // Trouver le début du JSON
+                int endIndex = rawData.lastIndexOf('}'); // Trouver la fin du JSON
 
-                // Envoi des données JSON dans la requête
-                try (OutputStream os = conn.getOutputStream()) {
-                    byte[] input = jsonData.getBytes("utf-8");
-                    os.write(input, 0, input.length);
+                if (startIndex != -1 && endIndex != -1 && endIndex > startIndex) {
+                    String jsonString = rawData.substring(startIndex, endIndex + 1); // Extraire le JSON
+                    dataBuffer.setLength(0); // Vider le buffer après extraction
+
+                    System.out.println("Données complètes reçues : " + jsonString);
+
+                    // Traiter le JSON extrait
+                    try {
+                        JSONObject jsonReceived = new JSONObject(jsonString);
+
+                        int temperature = jsonReceived.getInt("temperature");
+                        double pression = jsonReceived.getDouble("pression");
+                        double acceleration = jsonReceived.getDouble("acceleration");
+                        int vitesse = jsonReceived.getInt("vitesse");
+                        int altitude = jsonReceived.getInt("altitude");
+//                        long timestamp = jsonReceived.getLong("timestamp");
+//                        int launchId = jsonReceived.getInt("launch_id");
+
+                        // Construire un JSON pour l'envoi
+                        String jsonData = new JSONObject()
+                                .put("temperature", temperature)
+                                .put("pression", pression)
+                                .put("acceleration", acceleration)
+                                .put("vitesse", vitesse)
+                                .put("altitude", altitude)
+                                .put("launch_id", 4) // Ajoutez un launch_id par défaut ou configurable
+                                .toString();
+
+                        // Envoyer au serveur
+                        sendToServer(jsonData);
+
+                    } catch (Exception e) {
+                        System.err.println("Erreur lors du traitement des données JSON : " + e.getMessage());
+                        e.printStackTrace();
+                    }
                 }
-
-                // Obtenir la réponse du serveur
-                int responseCode = conn.getResponseCode();
-                System.out.println("Réponse du serveur : " + responseCode);
-
-            } catch (Exception e) {
-                e.printStackTrace();
             }
         });
 
         try {
-            Thread.sleep(10000); // Ajuste le temps d'attente si nécessaire
+            Thread.sleep(60000); // Durée d'écoute : 60 secondes
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
 
         comPort.closePort();
-        System.out.println("Port fermé.");
+        System.out.println("Port série fermé.");
+    }
+
+    private static void sendToServer(String jsonData) {
+        try {
+            URL url = new URL("http://localhost:3000/api/data");
+            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+            conn.setRequestMethod("POST");
+            conn.setRequestProperty("Content-Type", "application/json");
+            conn.setDoOutput(true);
+
+            try (OutputStream os = conn.getOutputStream()) {
+                byte[] input = jsonData.getBytes("utf-8");
+                os.write(input, 0, input.length);
+            }
+
+            int responseCode = conn.getResponseCode();
+            System.out.println("Réponse du serveur : " + responseCode);
+
+        } catch (Exception e) {
+            System.err.println("Erreur lors de l'envoi des données au serveur : " + e.getMessage());
+            e.printStackTrace();
+        }
     }
 }

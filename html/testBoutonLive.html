@@ -1,0 +1,46 @@
+<!-- Nouveau code pour le contrôle de l'enregistrement -->
+<div id="recording-control">
+  <button id="toggle-recording-btn">Activer l'enregistrement</button>
+  <p id="recording-status">Enregistrement désactivé</p>
+</div>
+
+<script>
+  // Nouveau script pour gérer l'état d'enregistrement
+  const toggleRecordingBtn = document.getElementById('toggle-recording-btn');
+  const recordingStatus = document.getElementById('recording-status');
+
+  let isRecording = false; // Suivi de l'état actuel
+
+  // Fonction pour basculer l'état d'enregistrement
+  toggleRecordingBtn.addEventListener('click', async () => {
+    isRecording = !isRecording;
+
+    // Envoi au serveur pour changer l'état d'enregistrement
+    await fetch('http://localhost:3000/api/recording', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ isRecording })
+    });
+
+    // Mise à jour de l'interface utilisateur
+    recordingStatus.textContent = isRecording
+            ? "Enregistrement activé"
+            : "Enregistrement désactivé";
+    toggleRecordingBtn.textContent = isRecording
+            ? "Désactiver l'enregistrement"
+            : "Activer l'enregistrement";
+  });
+
+  // Fonction pour récupérer l'état initial du serveur
+  (async () => {
+    const response = await fetch('http://localhost:3000/api/recording/status');
+    const data = await response.json();
+    isRecording = data.isRecording;
+    recordingStatus.textContent = isRecording
+            ? "Enregistrement activé"
+            : "Enregistrement désactivé";
+    toggleRecordingBtn.textContent = isRecording
+            ? "Désactiver l'enregistrement"
+            : "Activer l'enregistrement";
+  })();
+</script>

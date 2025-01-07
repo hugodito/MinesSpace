@@ -9,27 +9,27 @@ canvas.height = window_height;
 
 canvas.style.background = "#ddf";
 
-// Fonction pour récupérer les données depuis l'API
-async function fetchDataAndPlot(launchId) {
+
+/**
+ * Fonction pour récupérer les données depuis l'API
+ * 
+ * @param {*} launchId defintion de ton parametre
+ * @param {*} dataToPlotAsX 
+ */
+async function fetchDataAndPlot(launchId, dataNameToPlotAsX, dataNameToPlotAsY) {
     try {
-        const response = await fetch(`/api/data/${launchId}`);
+        //const response = await fetch(`/api/data/${launchId}`);
+        const response = await fetch(`../resources/mockDb.json`);
         if (!response.ok) {
             throw new Error(`Erreur API: ${response.statusText}`);
         }
         const apiData = await response.json();
 
         // Supposons que les données sont sous forme d'un tableau d'objets { time: ..., altitude: ... }
-        const rawX = apiData.map(point => point.timestamp);
-        const rawY = apiData.map(point => point.id);
-
-        console.log("rawX:", rawX);  // Log pour vérifier
-        console.log("rawY:", rawY);  // Log pour vérifier
+        const rawX = apiData.map(point => point[dataNameToPlotAsX]);
+        const rawY = apiData.map(point => point[dataNameToPlotAsY]);
 
         const result = sortTwoLists(rawX, rawY);
-
-        console.log("result", result);
-        console.log("sortedX:", result.sortedL);  // Log pour vérifier
-        console.log("sortedY:", result.sortedM);  // Log pour vérifier
 
         // Dessiner les données
         plotData(result.sortedL, result.sortedM);
@@ -38,8 +38,9 @@ async function fetchDataAndPlot(launchId) {
     }
 }
 
+
 // Fonction pour tracer les données
-function plotData(yData, xData) {
+function plotData(xData, yData) {
 
     const xMin = Math.min(...xData);
     const xMax = Math.max(...xData);
@@ -49,8 +50,8 @@ function plotData(yData, xData) {
     const xRange = xMax - xMin;
     const yRange = yMax - yMin;
 
-    const startX = canvas.width* (xData[0]+xMin)/xRange;
-    const startY = canvas.height*(yData[0]+yMin)/yRange;
+    const startX = canvas.width* (xData[0]-xMin)/xRange;
+    const startY = canvas.height*(yData[0]-yMin)/yRange;
 
     context.beginPath();
     context.moveTo(startX, startY);
@@ -84,5 +85,7 @@ function sortTwoLists(L, M) {
 }
 
 // Appeler la fonction avec l'identifiant de lancement
-const launchId = "1"; // Remplacez par l'ID réel ou récupérez-le dynamiquement
-fetchDataAndPlot(launchId);
+const launchId = 1 ; // Remplacez par l'ID réel ou récupérez-le dynamiquement
+xName = "timestamp";
+yName = "altitude" ; 
+fetchDataAndPlot(launchId, xName, yName);

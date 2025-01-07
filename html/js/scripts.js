@@ -1,4 +1,3 @@
-
 ///////////////Gestion des outils du HEADER////////////////////////////////////
 
 // Fonction pour afficher/masquer le menu déroulant

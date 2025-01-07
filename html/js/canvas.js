@@ -9,25 +9,29 @@ canvas.height = window_height;
 
 canvas.style.background = "#ddf";
 
+canvas.style.border = '1px solid #000';
 
 /**
  * Fonction pour récupérer les données depuis l'API
  * 
- * @param {*} launchId defintion de ton parametre
- * @param {*} dataToPlotAsX 
+ * @param {*} launchId Launch (project) id
+ * @param {*} dataNameToPlotAsX x-axis name
+ * @param {*} dataNameToPlotAsY y-axis name
  */
 async function fetchDataAndPlot(launchId, dataNameToPlotAsX, dataNameToPlotAsY) {
     try {
-        //const response = await fetch(`/api/data/${launchId}`);
-        const response = await fetch(`../resources/mockDb.json`);
+        const response = await fetch(`./resources/mockDb.json`); // Remplacez par l'URL réelle de l'API
         if (!response.ok) {
             throw new Error(`Erreur API: ${response.statusText}`);
         }
         const apiData = await response.json();
 
-        // Supposons que les données sont sous forme d'un tableau d'objets { time: ..., altitude: ... }
-        const rawX = apiData.map(point => point[dataNameToPlotAsX]);
-        const rawY = apiData.map(point => point[dataNameToPlotAsY]);
+        // Filtrer les données pour ne garder que celles correspondant au launchId
+        const filteredData = apiData.filter(point => point.launch_id === launchId);
+
+        // Extraire les données pour les axes X et Y
+        const rawX = filteredData.map(point => point[dataNameToPlotAsX]);
+        const rawY = filteredData.map(point => point[dataNameToPlotAsY]);
 
         const result = sortTwoLists(rawX, rawY);
 
@@ -84,8 +88,16 @@ function sortTwoLists(L, M) {
     return { sortedL, sortedM };
 }
 
+// Fonction pour mettre à jour et recharger le graphique
+function updatePlot(newYName) {
+    yName = newYName;
+    context.clearRect(0, 0, canvas.width, canvas.height); // Nettoyer le canvas
+    fetchDataAndPlot(launchId, xName, yName); // Relancer avec la nouvelle donnée Y
+}
+
+
 // Appeler la fonction avec l'identifiant de lancement
-const launchId = 1 ; // Remplacez par l'ID réel ou récupérez-le dynamiquement
+launchId = 1 ; // Remplacez par l'ID réel ou récupérez-le dynamiquement
 xName = "timestamp";
 yName = "altitude" ; 
 fetchDataAndPlot(launchId, xName, yName);

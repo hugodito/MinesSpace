@@ -317,3 +317,49 @@ footer a:hover {
 footer p {
     margin : 8px 0px;
 }
+
+/* Section pour les contrôles administrateurs */
+#admin-controls {
+    margin-top: 20px;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+#admin-controls h2 {
+    font-size: 1.8em;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+/* Styles pour le bouton d'enregistrement */
+.recording-button {
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Vert par défaut (enregistrement désactivé) */
+.recording-off {
+    background-color: #4CAF50;
+    color: white;
+}
+
+.recording-off:hover {
+    background-color: #45a049;
+}
+
+/* Rouge pour indiquer que l'enregistrement est activé */
+.recording-on {
+    background-color: #f44336;
+    color: white;
+}
+
+.recording-on:hover {
+    background-color: #d32f2f;
+}

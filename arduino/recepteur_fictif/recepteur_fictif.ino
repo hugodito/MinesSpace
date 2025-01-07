@@ -15,36 +15,31 @@ void loop() {
   // Envoi des données sous forme de JSON
 
   String jsonData = "{";
-  jsonData += "\"id\":" ;
-  jsonData += nombre;;
-  nombre = nombre +1;
-  jsonData += ", ";
 
   jsonData += "\"temperature\":" ;
   jsonData += String(random(15,25));
-  jsonData += ", ";
+  jsonData += ",";
 
   jsonData += "\"pression\":" ;
   jsonData += String(random(900,1000));
-  jsonData += ", ";
+  jsonData += ",";
 
-  jsonData += "\"accélération\":" ;
+  jsonData += "\"acceleration\":" ;
   jsonData += String(random(0,24));
-  jsonData += ", ";
+  jsonData += ",";
 
   jsonData += "\"vitesse\":" ;
   jsonData += String(random(0,50));
-  jsonData += ", ";
+  jsonData += ",";
 
   jsonData += "\"altitude\":" ;
   jsonData += String(random(0,2000));
-  jsonData += ", ";
+  jsonData += ",";
 
-  jsonData += "\"timestamp\": " + String(millis()) + ", ";
-  jsonData += "\"launch_id\": " + String(launch_id);
+  jsonData += "\"launch_id\":" ;
+  jsonData += String(launch_id);
   jsonData += "}";
 
-  Serial.println("Données envoyées :");
   Serial.println(jsonData);
   delay(1000);
 }

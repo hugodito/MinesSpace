@@ -15,8 +15,21 @@ app.use(cors());
 // Middleware pour servir les fichiers statiques depuis 'html'
 app.use(express.static(path.join(__dirname, '../html'))); // Cela permet de servir les fichiers CSS, JS, images, etc.
 
+let isRecording = false;
+
+// Route pour basculer l'état d'enregistrement
+app.post('/api/recording', (req, res) => {
+    isRecording = req.body.isRecording; // Attendez un booléen dans le body
+    console.log(`Enregistrement ${isRecording ? 'activé' : 'désactivé'}`);
+    res.json({ success: true, isRecording });
+});
+
+
 // Route POST : Enregistrer des données
 app.post('/api/data', async (req, res) => {
+    if (!isRecording) {
+        return res.status(403).json({ error: "L'enregistrement des données est désactivé." });
+    }
     try {
         const { temperature, pression, acceleration, vitesse, altitude, launch_id } = req.body;
 
@@ -73,6 +86,11 @@ app.get('/api/data/:launch_id', async (req, res) => {
         res.status(500).json({ message: 'Erreur serveur.' });
     }
 });
+
+app.get('/api/recording/status', (req, res) => {
+    res.json({ isRecording });
+});
+
 
 // Démarrage du serveur
 app.listen(PORT, () => {

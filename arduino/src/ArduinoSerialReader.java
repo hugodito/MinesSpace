@@ -6,6 +6,7 @@ import org.json.JSONObject;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.io.OutputStream;
+import java.util.Scanner;
 
 public class ArduinoSerialReader {
 
@@ -90,8 +91,30 @@ public class ArduinoSerialReader {
         System.out.println("Port série fermé.");
     }
 
+
+
     private static void sendToServer(String jsonData) {
         try {
+            URL statusUrl = new URL("http://localhost:3000/api/recording/status");
+            HttpURLConnection statusConn = (HttpURLConnection) statusUrl.openConnection();
+            statusConn.setRequestMethod("GET");
+            int statusResponseCode = statusConn.getResponseCode();
+
+            if (statusResponseCode == 200) {
+                // Lire la réponse pour vérifier l'état d'enregistrement
+                Scanner scanner = new Scanner(statusConn.getInputStream());
+                String jsonResponse = scanner.nextLine();
+                scanner.close();
+
+                JSONObject statusJson = new JSONObject(jsonResponse);
+                boolean isRecording = statusJson.getBoolean("isRecording");
+
+                if (!isRecording) {
+                    System.out.println("Enregistrement désactivé. Données ignorées.");
+                    return; // Arrêter ici si l'enregistrement est désactivé
+                }
+            }
+
             URL url = new URL("http://localhost:3000/api/data");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");

@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (user) {
                     alert("Connexion réussie !");
                     window.location.href = "index.html"; // Redirection après succès
-                    localStorage.setItem('user', username);  // Stocker le nom d'utilisateur dans localStorage
+                    localStorage.setItem('user', JSON.stringify(user));  // Stocker l'utilisateur dans localStorage
                 } else {
                     alert("Nom d'utilisateur ou mot de passe incorrect !");
                 }
@@ -70,7 +70,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
 document.addEventListener('DOMContentLoaded', () => {
     // Vérifier si l'utilisateur est connecté
-    const user = localStorage.getItem('user');  // Vérifier si l'utilisateur est stocké dans le localStorage
+    const user = JSON.parse(localStorage.getItem('user'));  // Vérifier si l'utilisateur est stocké dans le localStorage
 
     // Mettre à jour l'interface en fonction de l'état de la connexion
     if (user) {
@@ -81,6 +81,16 @@ document.addEventListener('DOMContentLoaded', () => {
         // Si l'utilisateur n'est pas connecté, afficher le bouton "Login"
         document.getElementById('login-logout-button').textContent = 'Login';
         document.getElementById('login-logout-button').onclick = login; // Définir la fonction login
+    }
+
+    // Gestion de l'affichage des contrôles administrateurs
+    const adminControls = document.getElementById('admin-controls');
+    if (adminControls) {
+        if (user && user.role === 'admin') {
+            adminControls.style.display = 'block';
+        } else {
+            adminControls.style.display = 'none';
+        }
     }
 });
 

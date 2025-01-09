@@ -11,11 +11,12 @@
         android:label="MinesSpace"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:theme="@style/AppTheme"
         tools:targetApi="31"
         android:usesCleartextTraffic="true">
         <activity android:name="com.minesspace.MainActivity"
             android:exported="true"
-            android:label="@string/app_name">
+            android:label="MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
@@ -24,6 +25,7 @@
         <activity android:name=".LiveDataActivity"
             android:exported="false"
             android:label="LiveDataActivity"
+            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
             />
     </application>
 

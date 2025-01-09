@@ -55,7 +55,7 @@ MinesSpace is an integrated system designed to monitor and manage environmental 
     Upload the appropriate code to the transmitter and receiver using the Arduino IDE.
 
 ## License
-This project has been done for the ECOLE DES MINES DE SAINT-ETIENNE ToolBox by :
-noemieherbiniere
-romainb42
-hugodito
+- This project has been done for the ECOLE DES MINES DE SAINT-ETIENNE ToolBox by :
+- noemieherbiniere
+- romainb42
+- hugodito

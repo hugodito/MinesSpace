@@ -15,22 +15,33 @@ app.use(cors());
 // Middleware pour servir les fichiers statiques depuis 'html'
 app.use(express.static(path.join(__dirname, '../html'))); // Cela permet de servir les fichiers CSS, JS, images, etc.
 
-let isRecording = false;
+// Exemple d'insertion de données factices avec launch_id
+const defaultLaunchId = 1;  // Exemple de launch_id par défaut
 
-// Route pour basculer l'état d'enregistrement
-app.post('/api/recording', (req, res) => {
-    isRecording = req.body.isRecording; // Attendez un booléen dans le body
-    console.log(`Enregistrement ${isRecording ? 'activé' : 'désactivé'}`);
-    res.json({ success: true, isRecording });
-});
+// Ajouter des données factices si la base est vide
+
+async function addFakeData() {
+    const fakeData = [
+        { temperature: 22.5, pression: 1013, acceleration: 0.98, vitesse: 15, altitude: 150, launch_id: 1 },
+        { temperature: 23.0, pression: 1012, acceleration: 1.05, vitesse: 16, altitude: 160, launch_id: 2 },
+        { temperature: 21.8, pression: 1010, acceleration: 1.02, vitesse: 14, altitude: 145, launch_id: 3 },
+    ];
+
+    // Insérer des données factices dans la base
+    for (const data of fakeData) {
+        try {
+            await sensorDataModel.insertData(data.temperature, data.pression, data.acceleration, data.vitesse, data.altitude, data.launch_id);
+            console.log('Données factices insérées');
+        } catch (err) {
+            console.error('Erreur lors de l\'insertion des données factices :', err);
+        }
+    }
+}
 
 
 
 // Route POST : Enregistrer des données
 app.post('/api/data', async (req, res) => {
-    if (!isRecording) {
-        return res.status(403).json({ error: "L'enregistrement des données est désactivé." });
-    }
     try {
         const { temperature, pression, acceleration, vitesse, altitude, launch_id } = req.body;
 
@@ -87,16 +98,21 @@ app.get('/api/data/:launch_id', async (req, res) => {
         res.status(500).json({ message: 'Erreur serveur.' });
     }
 });
+<<<<<<< HEAD
 app.get('/api/recording/status', (req, res) => {
     res.json({ isRecording });
 });
 
 
+=======
+>>>>>>> frontend
 
 // Démarrage du serveur
 app.listen(PORT, () => {
     console.log(`Serveur démarré sur http://localhost:${PORT}`);
 
+    // Ajouter des données factices lors du démarrage du serveur
+    addFakeData();
 });
 
 // Route DELETE : Supprimer des données par ID

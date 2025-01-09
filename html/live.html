@@ -1,62 +1,114 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Live</title>
-    <link rel="stylesheet" href="css/styles.css">
-    <script src="js/scripts.js" defer></script>
-
-    <link rel="icon" type="image/png" href="images/favicon.png">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Live Page</title>
+  <link rel="stylesheet" href="css/styles.css">
+  <script src="js/scripts.js" defer></script>
+  <link rel="icon" type="image/png" href="images/favicon.png">
 </head>
 <body>
-    <header>
-        <div class="header-container">
-            <!-- Logo cliquable qui mène à la page d'accueil -->
-            <a href="index.html">
-                <img src="images/navbar-logo.svg" alt="Logo" class="logo">
-            </a>
-    
-            <!-- Conteneur pour le bouton Live et le menu -->
-            <div class="menu-bar">
-                <!-- Bouton Live -->
-                <button id="live-button" onclick="window.location.href='live.html'">
-                    Live
-                </button>
-    
-                <!-- Menu Hamburger (trois barres) -->
-                <button class="hamburger-menu" id="hamburger-menu" onclick="toggleMenu()">
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                    <div class="bar"></div>
-                </button>
-    
-                <!-- Menu déroulant -->
-                <div id="menu-items" class="menu-items">
-                    <a href="projects.html">Nos Projets</a>
-                    <a href="about.html">À Propos</a>
-                    <a href="contact.html">Contact</a>
-                    <a href="#" id="login-logout-button">Login</a>
-                </div>
-            </div>
-        </div>
-    </header>
+<header>
+  <div class="header-container">
+    <!-- Logo cliquable qui mène à la page d'accueil -->
+    <a href="index.html">
+      <img src="images/navbar-logo.svg" alt="Logo" class="logo">
+    </a>
+    <div class="menu-bar">
+      <button id="live-button" onclick="window.location.href='live.html'">
+        Live
+      </button>
+      <button class="hamburger-menu" id="hamburger-menu" onclick="toggleMenu()">
+        <div class="bar"></div>
+        <div class="bar"></div>
+        <div class="bar"></div>
+      </button>
+      <div id="menu-items" class="menu-items">
+        <a href="projects.html">Nos Projets</a>
+        <a href="about.html">À Propos</a>
+        <a href="contact.html">Contact</a>
+        <a href="#" id="login-logout-button">Login</a>
+      </div>
+    </div>
+  </div>
+</header>
 
-    <main>
-        <div class="container">
-            <h1>Page Live</h1>
-            <p>Bienvenue sur la page Live. Suivez nos mises à jour en temps réel ici.</p>
-        </div>
-    </main>
+<main>
+  <div class="container">
+    <h1>Page Live</h1>
+    <p>Bienvenue sur la page Live. Suivez nos mises à jour en temps réel ici.</p>
 
-    <footer>
-        <div class="container">
-            <p>
-                <a href="about.html">À Propos</a> | 
-                <a href="projects.html">Nos Projets</a> | 
-                <a href="contact.html">Contact</a>
-            </p>
-        </div>
-    </footer>
+    <!-- Contrôles administrateur -->
+    <div id="admin-controls" style="display: none;">
+      <h2>Contrôles Administrateurs</h2>
+      <button id="toggle-recording-button" class="recording-button recording-off">
+        Enregistrer les données
+      </button>
+    </div>
+  </div>
+</main>
+
+<footer>
+  <div class="container">
+    <p>
+      <a href="about.html">À Propos</a> |
+      <a href="projects.html">Nos Projets</a> |
+      <a href="contact.html">Contact</a>
+    </p>
+  </div>
+</footer>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    // Récupérer le rôle de l'utilisateur depuis le localStorage
+    const userRole = localStorage.getItem('userRole');
+
+    // Récupérer l'élément des contrôles administrateurs
+    const adminControls = document.getElementById('admin-controls');
+
+    // Vérifier si l'utilisateur a le rôle d'administrateur
+    if (userRole === 'admin') {
+      adminControls.style.display = 'block';  // Afficher les contrôles administrateurs
+    } else {
+      adminControls.style.display = 'none';   // Masquer les contrôles administrateurs si ce n'est pas un admin
+    }
+
+    // Gestion du bouton d'enregistrement des données
+    const toggleRecordingButton = document.getElementById('toggle-recording-button');
+    let isRecording = false; // État initial
+
+    toggleRecordingButton.addEventListener('click', async () => {
+      isRecording = !isRecording; // Basculer l'état
+
+      // Mettre à jour le bouton
+      toggleRecordingButton.textContent = isRecording
+              ? "Arrêter l'enregistrement"
+              : "Enregistrer les données";
+
+      toggleRecordingButton.classList.toggle('recording-on', isRecording);
+      toggleRecordingButton.classList.toggle('recording-off', !isRecording);
+
+      // Appeler l'API pour mettre à jour l'état côté serveur
+      try {
+        const response = await fetch('/api/recording', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ isRecording }),
+        });
+
+        if (!response.ok) {
+          throw new Error('Erreur lors de la mise à jour de l\'état d\'enregistrement');
+        }
+      } catch (error) {
+        console.error('Erreur API :', error);
+        alert('Impossible de mettre à jour l\'état d\'enregistrement. Veuillez réessayer.');
+      }
+    });
+  });
+</script>
+
 </body>
 </html>

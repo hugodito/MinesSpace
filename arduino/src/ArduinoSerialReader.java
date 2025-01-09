@@ -57,8 +57,6 @@ public class ArduinoSerialReader {
                         double acceleration = jsonReceived.getDouble("acceleration");
                         int vitesse = jsonReceived.getInt("vitesse");
                         int altitude = jsonReceived.getInt("altitude");
-//                        long timestamp = jsonReceived.getLong("timestamp");
-//                        int launchId = jsonReceived.getInt("launch_id");
 
                         // Construire un JSON pour l'envoi
                         String jsonData = new JSONObject()
@@ -81,13 +79,21 @@ public class ArduinoSerialReader {
             }
         });
 
-
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             comPort.closePort();
             System.out.println("Port série fermé proprement.");
         }));
 
         System.out.println("Le programme fonctionne indéfiniment. Appuyez sur Ctrl+C pour arrêter.");
+
+        // ✅ Ajouter une boucle infinie pour empêcher l'arrêt du programme
+        while (true) {
+            try {
+                Thread.sleep(1000); // Pause pour réduire l'utilisation du CPU
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+        }
     }
 
     private static void sendToServer(String jsonData) {

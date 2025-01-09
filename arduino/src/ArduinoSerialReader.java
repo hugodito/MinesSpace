@@ -81,17 +81,14 @@ public class ArduinoSerialReader {
             }
         });
 
-        try {
-            Thread.sleep(60000); // Durée d'écoute : 60 secondes
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
 
-        comPort.closePort();
-        System.out.println("Port série fermé.");
+        Runtime.getRuntime().addShutdownHook(new Thread(() -> {
+            comPort.closePort();
+            System.out.println("Port série fermé proprement.");
+        }));
+
+        System.out.println("Le programme fonctionne indéfiniment. Appuyez sur Ctrl+C pour arrêter.");
     }
-
-
 
     private static void sendToServer(String jsonData) {
         try {

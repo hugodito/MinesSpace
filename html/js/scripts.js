@@ -14,6 +14,17 @@ if (menuButton) {
     menuButton.addEventListener('click', toggleMenu); // Lien entre le bouton et la fonction toggleMenu
 }
 
+// Ajouter un écouteur d'événements pour fermer le menu lorsqu'on clique en dehors
+document.addEventListener('click', function(event) {
+    const menu = document.getElementById('menu-items');
+    const hamburgerMenu = document.getElementById('hamburger-menu');
+
+    // Vérifier si le clic a eu lieu en dehors du menu et du bouton hamburger
+    if (menu && !menu.contains(event.target) && !hamburgerMenu.contains(event.target)) {
+        menu.classList.remove('visible'); // Fermer le menu
+    }
+});
+
 // Gestion du bouton Live
 const live = false; // Changez ici pour TRUE ou FALSE
 const liveButton = document.getElementById('live-button');
@@ -57,6 +68,7 @@ document.addEventListener("DOMContentLoaded", function() {
                     alert("Connexion réussie !");
                     window.location.href = "index.html"; // Redirection après succès
                     localStorage.setItem('user', username);  // Stocker le nom d'utilisateur dans localStorage
+                    localStorage.setItem('userRole', user.role);  // Stocker le rôle de l'utilisateur
                 } else {
                     alert("Nom d'utilisateur ou mot de passe incorrect !");
                 }
@@ -67,6 +79,7 @@ document.addEventListener("DOMContentLoaded", function() {
         });
     }
 });
+
 
 document.addEventListener('DOMContentLoaded', () => {
     // Vérifier si l'utilisateur est connecté
@@ -84,10 +97,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
+
 // Fonction pour gérer la déconnexion
 function logout() {
     // Retirer les informations d'utilisateur du localStorage
     localStorage.removeItem('user');
+    localStorage.removeItem('username');
+    localStorage.setItem('userRole', 'none');
+    localStorage.removeItem('loggedInUser');
 
     // Afficher un message de confirmation
     alert('Vous êtes déconnecté');

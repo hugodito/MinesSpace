@@ -108,8 +108,12 @@ function updatePlot(newYName) {
 }
 
 
-// Appeler la fonction avec l'identifiant de lancement
-const launchId = 1 ; // Remplacez par l'ID réel ou récupérez-le dynamiquement
-xName = "timestamp";
-yName = "altitude" ; 
-fetchDataAndPlot(launchId, xName, yName);
+// Ajoutez un launchId par défaut pour le graphique
+const launchId = 1; // ID du projet à tracer initialement
+const defaultXName = "timestamp"; // Axe X par défaut
+let currentYName = "altitude"; // Axe Y par défaut
+
+// Dessiner le graphique initial avec les paramètres par défaut
+document.addEventListener("DOMContentLoaded", function() {
+    fetchDataAndPlot(launchId, defaultXName, currentYName);
+});

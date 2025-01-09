@@ -14,6 +14,17 @@ if (menuButton) {
     menuButton.addEventListener('click', toggleMenu); // Lien entre le bouton et la fonction toggleMenu
 }
 
+// Ajouter un écouteur d'événements pour fermer le menu lorsqu'on clique en dehors
+document.addEventListener('click', function(event) {
+    const menu = document.getElementById('menu-items');
+    const hamburgerMenu = document.getElementById('hamburger-menu');
+
+    // Vérifier si le clic a eu lieu en dehors du menu et du bouton hamburger
+    if (menu && !menu.contains(event.target) && !hamburgerMenu.contains(event.target)) {
+        menu.classList.remove('visible'); // Fermer le menu
+    }
+});
+
 // Gestion du bouton Live
 const live = false; // Changez ici pour TRUE ou FALSE
 const liveButton = document.getElementById('live-button');
@@ -56,7 +67,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 if (user) {
                     alert("Connexion réussie !");
                     window.location.href = "index.html"; // Redirection après succès
-                    localStorage.setItem('user', JSON.stringify(user));  // Stocker l'utilisateur dans localStorage
+                    localStorage.setItem('user', username);  // Stocker le nom d'utilisateur dans localStorage
+                    localStorage.setItem('userRole', user.role);  // Stocker le rôle de l'utilisateur
                 } else {
                     alert("Nom d'utilisateur ou mot de passe incorrect !");
                 }
@@ -68,9 +80,10 @@ document.addEventListener("DOMContentLoaded", function() {
     }
 });
 
+
 document.addEventListener('DOMContentLoaded', () => {
     // Vérifier si l'utilisateur est connecté
-    const user = JSON.parse(localStorage.getItem('user'));  // Vérifier si l'utilisateur est stocké dans le localStorage
+    const user = localStorage.getItem('user');  // Vérifier si l'utilisateur est stocké dans le localStorage
 
     // Mettre à jour l'interface en fonction de l'état de la connexion
     if (user) {
@@ -82,22 +95,16 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('login-logout-button').textContent = 'Login';
         document.getElementById('login-logout-button').onclick = login; // Définir la fonction login
     }
-
-    // Gestion de l'affichage des contrôles administrateurs
-    const adminControls = document.getElementById('admin-controls');
-    if (adminControls) {
-        if (user && user.role === 'admin') {
-            adminControls.style.display = 'block';
-        } else {
-            adminControls.style.display = 'none';
-        }
-    }
 });
+
 
 // Fonction pour gérer la déconnexion
 function logout() {
     // Retirer les informations d'utilisateur du localStorage
     localStorage.removeItem('user');
+    localStorage.removeItem('username');
+    localStorage.setItem('userRole', 'none');
+    localStorage.removeItem('loggedInUser');
 
     // Afficher un message de confirmation
     alert('Vous êtes déconnecté');

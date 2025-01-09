@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Live</title>
+  <title>Live Page</title>
   <link rel="stylesheet" href="css/styles.css">
   <script src="js/scripts.js" defer></script>
   <link rel="icon" type="image/png" href="images/favicon.png">
@@ -46,8 +46,6 @@
         Enregistrer les données
       </button>
     </div>
-
-
   </div>
 </main>
 
@@ -62,16 +60,18 @@
 </footer>
 
 <script>
-  // Simulation : définir isAdmin à true pour voir les contrôles administrateurs
-  sessionStorage.setItem('isAdmin', 'true'); // Supprimez ou désactivez cette ligne en production
-
   document.addEventListener('DOMContentLoaded', () => {
-    // Vérification si l'utilisateur est administrateur
-    const isAdmin = sessionStorage.getItem('isAdmin') === 'true';
+    // Récupérer le rôle de l'utilisateur depuis le localStorage
+    const userRole = localStorage.getItem('userRole');
+
+    // Récupérer l'élément des contrôles administrateurs
     const adminControls = document.getElementById('admin-controls');
 
-    if (isAdmin) {
-      adminControls.style.display = 'block';
+    // Vérifier si l'utilisateur a le rôle d'administrateur
+    if (userRole === 'admin') {
+      adminControls.style.display = 'block';  // Afficher les contrôles administrateurs
+    } else {
+      adminControls.style.display = 'none';   // Masquer les contrôles administrateurs si ce n'est pas un admin
     }
 
     // Gestion du bouton d'enregistrement des données
@@ -109,7 +109,6 @@
     });
   });
 </script>
-
 
 </body>
 </html>

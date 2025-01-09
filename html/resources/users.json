@@ -5,7 +5,18 @@
         "role": "admin"
     },
     {
-        "username": "user",
-        "password": "user123",
-        "role": "user" }
+        "username": "a",
+        "password": "b",
+        "role": "admin"
+    },
+    {
+        "username": "johndoe",
+        "password": "password123",
+        "role": "user"
+    },
+    {
+        "username": "janedoe",
+        "password": "mypassword",
+        "role": "moderator"
+    }
 ]

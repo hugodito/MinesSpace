@@ -25,6 +25,7 @@ app.post('/api/recording', (req, res) => {
 });
 
 
+
 // Route POST : Enregistrer des données
 app.post('/api/data', async (req, res) => {
     if (!isRecording) {
@@ -86,10 +87,10 @@ app.get('/api/data/:launch_id', async (req, res) => {
         res.status(500).json({ message: 'Erreur serveur.' });
     }
 });
-
 app.get('/api/recording/status', (req, res) => {
     res.json({ isRecording });
 });
+
 
 
 // Démarrage du serveur

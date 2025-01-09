@@ -70,6 +70,18 @@ function plotData(xData, yData) {
     
 }
 
+function updatePlot(newYName) {
+    currentYName = newYName;
+    const canvas = document.getElementById("canvas");
+    const context = canvas.getContext("2d");
+
+    // Nettoyer le canvas avant de redessiner
+    context.clearRect(0, 0, canvas.width, canvas.height);
+
+    // Appeler la fonction fetchDataAndPlot avec les paramètres appropriés
+    fetchDataAndPlot(launchId, defaultXName, currentYName);
+}
+
 function sortTwoLists(L, M) {
     if (L.length !== M.length) {
         throw new Error("Les deux listes doivent avoir la même longueur.");
@@ -96,8 +108,12 @@ function updatePlot(newYName) {
 }
 
 
-// Appeler la fonction avec l'identifiant de lancement
-launchId = 1 ; // Remplacez par l'ID réel ou récupérez-le dynamiquement
-xName = "timestamp";
-yName = "altitude" ; 
-fetchDataAndPlot(launchId, xName, yName);
+// Ajoutez un launchId par défaut pour le graphique
+const launchId = 1; // ID du projet à tracer initialement
+const defaultXName = "timestamp"; // Axe X par défaut
+let currentYName = "altitude"; // Axe Y par défaut
+
+// Dessiner le graphique initial avec les paramètres par défaut
+document.addEventListener("DOMContentLoaded", function() {
+    fetchDataAndPlot(launchId, defaultXName, currentYName);
+});

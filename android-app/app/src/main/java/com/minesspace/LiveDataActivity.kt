@@ -1,157 +1,235 @@
 package com.minesspace
 
-import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.lifecycleScope
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
 import okhttp3.Request
-import okhttp3.Response
 import org.json.JSONArray
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
+
 class LiveDataActivity : ComponentActivity() {
-    private val apiUrl = "http://10.0.2.2:3000/api/data" // Émulateur Android pointe vers localhost avec 10.0.2.2
-    private val liveStatusApiUrl = "http://10.0.2.2:3000/api/status" // API pour vérifier si live est actif
+    private val apiUrl = "http://10.0.2.2:3000/api/data" // URL API pour récupérer les données
     private val client = OkHttpClient()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        window.requestFeature(Window.FEATURE_NO_TITLE)
-        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-
-        // Cacher la barre inférieure (NavigationBar)
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+        val launchId = intent.getIntExtra("launch_id", -1)
 
         setContent {
-            LiveDataScreen(
-                fetchLiveDataStatus = ::fetchLiveDataStatus,
-                fetchLiveData = ::fetchLiveData
-            )
-        }
-    }
-
-    private suspend fun fetchLiveDataStatus(): Boolean {
-        return withContext(Dispatchers.IO) {
-            val request = Request.Builder().url(liveStatusApiUrl).build()
-            val response: Response = client.newCall(request).execute()
-            val responseData = response.peekBody(Long.MAX_VALUE).string()
-            responseData.trim() == "true"
-        }
-    }
-
-    private suspend fun fetchLiveData(): String {
-        return withContext(Dispatchers.IO) {
-            val request = Request.Builder().url(apiUrl).build()
-            val response: Response = client.newCall(request).execute()
-            val responseData = response.peekBody(Long.MAX_VALUE).string()
-
-            if (response.isSuccessful && responseData.isNotEmpty()) {
-                parseJson(responseData)
-            } else {
-                "Erreur lors de la récupération des données."
+            if (launchId != -1) {
+                LiveDataScreen(fetchLiveData = { fetchLiveData(launchId) }, launchId = launchId)
             }
         }
     }
 
-    private fun parseJson(responseData: String): String {
+    private suspend fun fetchLiveData(launchId: Int): List<LiveDataItem> {
+        return withContext(Dispatchers.IO) {
+            try {
+                val request = Request.Builder()
+                    .url("$apiUrl?launch_id=$launchId") // Ajout du launch_id dans l'URL pour filtrer les données
+                    .build()
+                val response = client.newCall(request).execute()
+                val responseData = response.peekBody(Long.MAX_VALUE).string()
+
+                if (response.isSuccessful) {
+                    val dataList = parseJson(responseData, launchId)
+                    // Trier les données par date, de la plus récente à la plus vieille
+                    dataList.sortedByDescending { it.timestamp.toLong() }                } else {
+                    emptyList()
+                }
+            } catch (e: Exception) {
+                emptyList()
+            }
+        }
+    }
+
+    // Filtrer les données en fonction du launch_id
+    private fun parseJson(responseData: String, launchId: Int): List<LiveDataItem> {
         val jsonArray = JSONArray(responseData)
-        val stringBuilder = StringBuilder()
+        val dataList = mutableListOf<LiveDataItem>()
 
         for (i in 0 until jsonArray.length()) {
             val item = jsonArray.getJSONObject(i)
-            val timestamp = item.getString("timestamp")
-            val temperature = item.getString("temperature")
-            val pressure = item.getString("pression")
-            val altitude = item.getString("altitude")
+            val itemLaunchId = item.optInt("launch_id")
 
-            stringBuilder.append("Timestamp: $timestamp\n")
-            stringBuilder.append("Température: $temperature °C\n")
-            stringBuilder.append("Pression: $pressure hPa\n")
-            stringBuilder.append("Altitude: $altitude m\n\n")
+            // Ne récupérer que les données correspondant au launch_id
+            if (itemLaunchId == launchId) {
+                val liveDataItem = LiveDataItem(
+                    timestamp = item.optString("timestamp"),
+                    temperature = item.optString("temperature"),
+                    pressure = item.optString("pression"),
+                    altitude = item.optString("altitude"),
+                    acceleration = item.optString("acceleration"),
+                    vitesse = item.optString("vitesse"),
+                    launchId = itemLaunchId
+                )
+                dataList.add(liveDataItem)
+            }
         }
 
-        return stringBuilder.toString()
+        return dataList
+    }
+}
+
+
+data class LiveDataItem(
+    val timestamp: String,
+    val temperature: String,
+    val pressure: String,
+    val altitude: String,
+    val acceleration: String,
+    val vitesse: String,
+    val launchId: Int
+)
+
+fun formatTimestampToDateTime(timestamp: String): String {
+    return try {
+        val milliseconds = timestamp.toLong()
+        val date = Date(milliseconds)
+        val format = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
+        format.format(date)
+    } catch (e: Exception) {
+        "Invalid timestamp"
     }
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun LiveDataScreen(
-    fetchLiveDataStatus: suspend () -> Boolean,  // Fonction pour vérifier le statut du live
-    fetchLiveData: suspend () -> String          // Fonction pour récupérer les données
-) {
-    // Déclarez un état pour la donnée en direct et le statut
-    var liveData by remember { mutableStateOf("Données en attente...") }
-    var status by remember { mutableStateOf("Vérification du statut...") }
+fun LiveDataScreen(fetchLiveData: suspend () -> List<LiveDataItem>, launchId: Int) {
+    var liveData by remember { mutableStateOf<List<LiveDataItem>>(emptyList()) }
+    var errorMessage by remember { mutableStateOf<String?>(null) }
+    val context = LocalContext.current
 
-    // Récupérer les données en direct
+    // Mise à jour en temps réel avec un intervalle
     LaunchedEffect(Unit) {
-        try {
-            val isLive = fetchLiveDataStatus()
-            if (isLive) {
-                status = "Live en cours..."
+        while (true) {
+            try {
                 liveData = fetchLiveData()
-            } else {
-                status = "Désolé, pas de lancer en direct pour le moment."
-                liveData = ""
+                errorMessage = null
+            } catch (e: Exception) {
+                errorMessage = "Erreur lors de la récupération des données : ${e.message}"
             }
-        } catch (e: Exception) {
-            status = "Erreur : ${e.message}"
-            liveData = ""
+            delay(5000) // Actualisation toutes les 5 secondes
         }
     }
 
-    // Scaffold avec le TopAppBar et la mise en page de Column
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Live Data") },
+                title = { Text("Données du lancer $launchId") }, // Affichage du launch_id dans le titre
                 navigationIcon = {
-                    IconButton(onClick = { /* Action pour revenir en arrière */ }) {
+                    IconButton(onClick = { (context as? LiveDataActivity)?.finish() }) {
                         Icon(Icons.Default.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
         }
-    ) { innerPadding ->  // innerPadding est automatiquement fourni par le Scaffold
-        // Appliquez les padding à votre contenu ici, directement dans Column
+    ) { innerPadding ->
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(innerPadding)  // Utilisez innerPadding pour prendre en compte les marges du Scaffold
-                .padding(16.dp),  // Ajoutez du padding autour du contenu
+                .padding(innerPadding)
+                .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
-            Text(text = status, style = MaterialTheme.typography.bodyLarge) // Utilisation de bodyLarge
-            Spacer(modifier = Modifier.height(16.dp))
-            Text(text = liveData, style = MaterialTheme.typography.bodyLarge) // Utilisation de bodyLarge
+            if (errorMessage != null) {
+                Text(text = errorMessage ?: "", color = MaterialTheme.colorScheme.error)
+            } else if (liveData.isEmpty()) {
+                Text(text = "Aucune donnée disponible pour le moment.")
+            } else {
+                // Afficher les données sous forme de tableau
+                Column(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    // Légendes des colonnes
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceEvenly,
+                        verticalAlignment=Alignment.CenterVertically
+                    ) {
+                        Text("Date et Heure", modifier = Modifier.weight(1.5f), textAlign = TextAlign.Center)
+                        Text("Température (°C)", modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
+                        Text("Pression (hPa)", modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
+                        Text("Altitude (m)", modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
+                        Text("Accélération (m/s²)", modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
+                        Text("Vitesse (m/s)", modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
+                    }
+
+                    // Séparateur
+                    Divider(modifier = Modifier.padding(vertical = 8.dp))
+
+                    // Lignes du tableau
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth(),
+                        verticalArrangement = Arrangement.spacedBy(4.dp)
+                    ) {
+                        items(liveData) { dataItem ->
+                            LiveDataRow(dataItem)
+                        }
+                    }
+                }
+            }
         }
     }
 }
 
+@Composable
+fun LiveDataRow(item: LiveDataItem) {
+    val formattedDate = formatTimestampToDateTime(item.timestamp)
+
+    // Créer un tableau avec une ligne pour chaque donnée
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(vertical = 8.dp)
+            .border(1.dp, MaterialTheme.colorScheme.primary) // Bordure de la ligne
+            .background(MaterialTheme.colorScheme.surface), // Fond de la ligne
+        horizontalArrangement = Arrangement.SpaceEvenly,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Text(formatTimestampToDateTime(item.timestamp), modifier = Modifier.weight(1.5f), textAlign = TextAlign.Center)
+        Text(item.temperature, modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
+        Text(item.pressure, modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
+        Text(item.altitude, modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
+        Text(item.acceleration, modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
+        Text(item.vitesse, modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
+    }
+}
 
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
-    LiveDataScreen(
-        fetchLiveDataStatus = { true },  // Retourne true par défaut dans le preview
-        fetchLiveData = { "Données en attente..." } // Retourne une chaîne de test
+fun LiveDataPreview() {
+    val sampleData = listOf(
+        LiveDataItem("1672502400000", "23", "1013", "150", "1.02", "15", 1),
+        LiveDataItem("1672502410000", "22.5", "1012", "160", "1.05", "16", 2)
     )
+    LazyColumn(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        items(sampleData) { LiveDataRow(it) }
+    }
 }

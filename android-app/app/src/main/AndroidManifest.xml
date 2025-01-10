@@ -25,7 +25,10 @@
         <activity android:name=".LiveDataActivity"
             android:exported="false"
             android:label="LiveDataActivity"
-            android:theme="@style/Theme.AppCompat.Light.DarkActionBar"
+            />
+        <activity android:name=".LaunchSelectionActivity"
+            android:exported="false"
+            android:label="LaunchSelectionActivity"
             />
     </application>
 

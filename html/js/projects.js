@@ -1,73 +1,96 @@
-// Fonction pour charger les données des capteurs par lancer
-async function loadSensorDataByLaunch(launchId) {
-    const tableBody = document.querySelector(`#sensor-table-${launchId} tbody`);
+document.addEventListener('DOMContentLoaded', loadProjects);
+
+async function loadProjects() {
+    const mainContent = document.getElementById('main-content');
 
     try {
-        const response = await fetch(`/api/data/${launchId}`);
-        const data = await response.json();
+        // Original path commented out for testing
+        const response = await fetch('/api/data/');
+        //const response = await fetch('resources/mockDb.json');
+        const projects = await response.json();
 
-        if (Array.isArray(data)) {
-            data.forEach((sensor) => {
-                const row = document.createElement('tr');
+        // Sort projects by launch_id from highest to lowest
+        projects.sort((a, b) => b.launch_id - a.launch_id);
 
-                row.innerHTML = `
-                    <td>${sensor.id}</td>
-                    <td>${sensor.temperature.toFixed(2)}</td>
-                    <td>${sensor.pression.toFixed(2)}</td>
-                    <td>${sensor.acceleration.toFixed(2)}</td>
-                    <td>${sensor.vitesse.toFixed(2)}</td>
-                    <td>${sensor.altitude.toFixed(2)}</td>
-                    <td>${new Date(sensor.timestamp).toLocaleString()}</td>
+        // Use a Set to keep track of unique launch_ids
+        const uniqueLaunchIds = new Set();
+
+        projects.forEach(project => {
+            if (!uniqueLaunchIds.has(project.launch_id)) {
+                uniqueLaunchIds.add(project.launch_id);
+
+                const projectBox = document.createElement('div');
+                projectBox.classList.add('project-box');
+
+                // Format the timestamp as a date
+                const launchDate = new Date(project.timestamp).toLocaleDateString();
+
+                projectBox.innerHTML = `
+                    <h3>Projet n°${project.launch_id}</h3>
+                    <p>${launchDate}</p>
                 `;
 
-                tableBody.appendChild(row);
-            });
-        } else {
-            tableBody.innerHTML = `<tr><td colspan="7">Aucune donnée disponible.</td></tr>`;
-        }
+                projectBox.addEventListener('click', () => {
+                    // Check if the canvas already exists
+                    let canvas = projectBox.querySelector('canvas');
+                    if (!canvas) {
+                        // Remove any existing canvas from other boxes
+                        const existingCanvas = document.querySelector('canvas');
+                        if (existingCanvas) {
+                            existingCanvas.remove();
+                            const existingButtons = document.querySelectorAll('.project-button');
+                            existingButtons.forEach(button => button.remove());
+                        }
+
+                        // Make the box unclickable
+                        projectBox.classList.add('unclickable');
+
+                        // Create and append new canvas
+                        canvas = document.createElement('canvas');
+                        canvas.id = `canvas-${project.launch_id}`;
+                        canvas.width = 400; // Set canvas width
+                        canvas.height = 300; // Set canvas height
+                        projectBox.appendChild(canvas);
+
+                        // Load the canvas script
+                        const script = document.createElement('script');
+                        script.src = 'js/canvas.js';
+                        script.onload = () => {
+                            // Initialize the canvas drawing
+                            initializeCanvas(canvas.id, project.launch_id);
+                        };
+                        document.body.appendChild(script);
+
+                        // Create and append buttons
+                        const buttonContainer = document.createElement('div');
+                        buttonContainer.classList.add('button-container');
+
+                        const button1 = document.createElement('button');
+                        button1.classList.add('project-button');
+                        button1.textContent = 'Altitude';
+                        button1.addEventListener('click', () => updateGraph('altitude', 'timestamp', project.launch_id));
+                        buttonContainer.appendChild(button1);
+
+                        const button2 = document.createElement('button');
+                        button2.classList.add('project-button');
+                        button2.textContent = 'Temperature';
+                        button2.addEventListener('click', () => updateGraph('temperature', 'timestamp', project.launch_id));
+                        buttonContainer.appendChild(button2);
+
+                        const button3 = document.createElement('button');
+                        button3.classList.add('project-button');
+                        button3.textContent = 'Speed';
+                        button3.addEventListener('click', () => updateGraph('vitesse', 'timestamp', project.launch_id));
+                        buttonContainer.appendChild(button3);
+
+                        projectBox.appendChild(buttonContainer);
+                    }
+                });
+
+                mainContent.appendChild(projectBox);
+            }
+        });
     } catch (error) {
-        console.error('Erreur lors de la récupération des données :', error);
-        tableBody.innerHTML = `<tr><td colspan="7">Erreur lors du chargement des données.</td></tr>`;
+        console.error('Error fetching projects:', error);
     }
 }
-
-// Fonction pour afficher plusieurs tableaux pour différents lancers
-async function loadAllLaunchData() {
-    // Pour chaque lancer, crée un tableau et charge ses données
-    const launchIds = [1, 2, 3];  // Exemple de liste d'IDs de lancers (tu devrais la récupérer dynamiquement)
-    launchIds.forEach((launchId) => {
-        const tableContainer = document.createElement('div');
-        tableContainer.classList.add('launch-table-container');
-
-        const tableTitle = document.createElement('h3');
-        tableTitle.textContent = `Lancer ${launchId}`;
-
-        const table = document.createElement('table');
-        table.id = `sensor-table-${launchId}`;
-        table.innerHTML = `
-            <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Température</th>
-                    <th>Pression</th>
-                    <th>Accélération</th>
-                    <th>Vitesse</th>
-                    <th>Altitude</th>
-                    <th>Temps</th>
-                </tr>
-            </thead>
-            <tbody>
-            </tbody>
-        `;
-
-        tableContainer.appendChild(tableTitle);
-        tableContainer.appendChild(table);
-        document.querySelector('#launch-data-container').appendChild(tableContainer);
-
-        // Charge les données pour ce lancer
-        loadSensorDataByLaunch(launchId);
-    });
-}
-
-// Charger les données pour tous les lancers au démarrage
-document.addEventListener('DOMContentLoaded', loadAllLaunchData);

@@ -75,7 +75,7 @@ All you need is to start the app in Android Studio (on a physical device or emul
 ### What could be implemented in the future
 
 - On the app : display the data with graphs instead of a table that isn't easy to read and add a Live page
-- On the website : a fonctionnality to delete some lines of data, or a whole project, from the website when logged as an admin (it has already been implemented in server.js, it just needs to be developped in projects.js (in html/js/) and in projects.html) and a better display of the projects' graphs
+- On the website : a fonctionnality to delete some lines of data, or a whole project, from the website when logged as an admin (it has already been implemented in server.js and SensorData.js (backend/models/, it just needs to be developped in projects.js (in html/js/) and in projects.html) and a better display of the projects' graphs
 
 ## License
 - This project has been done for the ECOLE DES MINES DE SAINT-ETIENNE ToolBox PWME by :

@@ -26,22 +26,20 @@ document.addEventListener('click', function(event) {
 });
 
 // Gestion du bouton Live
-const live = false; // Changez ici pour TRUE ou FALSE
 const liveButton = document.getElementById('live-button');
-if (liveButton) {
-    if (live) {
+if (localStorage.getItem('islive')) {
         liveButton.style.color = 'white';
-        liveButton.style.backgroundColor = '#47453f';
+        liveButton.style.backgroundColor = 'red';
     } else {
-        liveButton.style.color = '#f20a29';
-        liveButton.style.backgroundColor = '#d4abb1';
+        liveButton.style.color = 'white';
+        liveButton.style.backgroundColor = 'grey';
     }
-    
+
     // Rediriger vers live.html lors du clic
     liveButton.addEventListener('click', function() {
         window.location.href = 'live.html';  // Redirection vers la page live.html
     });
-}
+
 
 
 ////////////////////////// GESTION DU LOGIN 

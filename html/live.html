@@ -147,10 +147,11 @@
 
     // Gestion du bouton d'enregistrement des données
     const toggleRecordingButton = document.getElementById('toggle-recording-button');
-    let isRecording = false; // État initial
+    let isRecording = false;
 
     toggleRecordingButton.addEventListener('click', async () => {
       isRecording = !isRecording; // Basculer l'état
+      localStorage.setItem('islive', isRecording);
 
       // Mettre à jour le bouton
       toggleRecordingButton.textContent = isRecording

@@ -1,81 +1,106 @@
 package com.minesspace
 
+import android.content.Intent
 import android.os.Bundle
+import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.enableEdgeToEdge
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material3.Scaffold
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.sp
 import com.minesspace.ui.theme.MinesSpaceTheme
-import android.widget.Button
-import android.widget.TextView
-import androidx.appcompat.app.AppCompatActivity
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 
-class MainActivity : AppCompatActivity() {
-
-    private lateinit var fetchDataButton: Button
-    private lateinit var postDataButton: Button
-    private lateinit var displayDataTextView: TextView
-
+class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        // Cacher la barre supérieure (ActionBar)
+        window.requestFeature(Window.FEATURE_NO_TITLE)
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
 
-        // Initialiser les vues
-        fetchDataButton = findViewById(R.id.fetchDataButton)
-        postDataButton = findViewById(R.id.postDataButton)
-        displayDataTextView = findViewById(R.id.displayDataTextView)
+        // Cacher la barre inférieure (NavigationBar)
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
 
-        // Bouton pour récupérer les données
-        fetchDataButton.setOnClickListener {
-            fetchSensorData()
-        }
-
-        // Bouton pour envoyer des données
-        postDataButton.setOnClickListener {
-            val sensorData = SensorData(temperature = 22.5, pression = 1013.0)
-            sendSensorData(sensorData)
+        setContent {
+            MinesSpaceTheme {
+                // App UI
+                MainScreen()
+            }
         }
     }
+}
 
-    private fun fetchSensorData() {
-        // Récupérer les données via Retrofit
-        RetrofitClient.apiService.getSensorData().enqueue(object : Callback<List<SensorData>> {
-            override fun onResponse(call: Call<List<SensorData>>, response: Response<List<SensorData>>) {
-                if (response.isSuccessful) {
-                    val data = response.body()
-                    displayDataTextView.text = data?.joinToString("\n") { "Temp: ${it.temperature}, Pression: ${it.pression}" }
-                }
-            }
 
-            override fun onFailure(call: Call<List<SensorData>>, t: Throwable) {
-                displayDataTextView.text = "Erreur lors de la récupération des données"
-            }
-        })
+@Composable
+fun MainScreen() {
+    val context = LocalContext.current
+
+    // Modifier pour centrer le contenu
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(16.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Top // Le logo est en haut
+    ) {
+        Spacer(modifier = Modifier.height(50.dp))
+        // Logo
+        val logo = painterResource(id = R.drawable.logo_minesspace)
+        Image(painter = logo, contentDescription = "Logo MinesSpace", modifier = Modifier.fillMaxWidth().height(300.dp))
+
+        // Espacement entre le logo et le texte/bouton
+        Spacer(modifier = Modifier.height(50.dp)) // Espacement pour centrer les autres éléments
+
+        // Texte de bienvenue
+        Text(
+            text = "Bienvenue sur l'application Mines Space, où vous pouvez suivre tous nos lancers en direct",
+            fontSize = 18.sp, // Taille du texte
+            color = Color.Black,
+            modifier = Modifier.padding(horizontal = 16.dp),
+            style = androidx.compose.material3.MaterialTheme.typography.bodyLarge
+        )
+
+        // Espacement entre le texte et le bouton
+        Spacer(modifier = Modifier.height(40.dp))
+
+        // Bouton
+        Button(
+            onClick = {
+                val intent = Intent(context, LiveDataActivity::class.java)
+                context.startActivity(intent)
+            },
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 40.dp),
+            content = {
+                Text(text = "Accéder au live", color = Color.White, fontSize = 20.sp) // Texte plus grand
+            },
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
+                containerColor = Color.Red
+            )
+        )
+
+        // Espacement en bas pour centrer l'ensemble
+        Spacer(modifier = Modifier.weight(1f)) // Espacement pour centrer les éléments
     }
+}
 
-    private fun sendSensorData(sensorData: SensorData) {
-        // Envoyer les données via Retrofit
-        RetrofitClient.apiService.postSensorData(sensorData).enqueue(object : Callback<Void> {
-            override fun onResponse(call: Call<Void>, response: Response<Void>) {
-                if (response.isSuccessful) {
-                    displayDataTextView.text = "Données envoyées avec succès!"
-                } else {
-                    displayDataTextView.text = "Erreur lors de l'envoi des données"
-                }
-            }
 
-            override fun onFailure(call: Call<Void>, t: Throwable) {
-                displayDataTextView.text = "Erreur réseau"
-            }
-        })
-    }
+
+
+@Preview(showBackground = true)
+@Composable
+fun MainPreview() {
+    MainScreen()
 }

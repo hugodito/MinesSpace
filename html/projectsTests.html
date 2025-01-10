@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nos Projets</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <link rel="icon" type="image/png" href="images/favicon.png">
+    <script src="js/scripts.js" defer></script>
+    <script src="js/projects.js" defer></script>
+    <script src="js/canvas.js" defer></script>
+</head>
+<body>
+    <header>
+        <div class="header-container">
+            <!-- Logo cliquable qui mène à la page d'accueil -->
+            <a href="index.html">
+                <img src="images/navbar-logo.svg" alt="Logo" class="logo">
+            </a>
+    
+            <!-- Conteneur pour le bouton Live et le menu -->
+            <div class="menu-bar">
+                <!-- Bouton Live -->
+                <button id="live-button" onclick="window.location.href='live.html'">
+                    Live
+                </button>
+    
+                <!-- Menu Hamburger (trois barres) -->
+                <button class="hamburger-menu" id="hamburger-menu" onclick="toggleMenu()">
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                    <div class="bar"></div>
+                </button>
+    
+                <!-- Menu déroulant -->
+                <div id="menu-items" class="menu-items">
+                    <a href="projects.html">Nos Projets</a>
+                    <a href="about.html">À Propos</a>
+                    <a href="contact.html">Contact</a>
+                    <a href="login.html">Login</a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <main>
+        <div class="container">
+            <h1>Nos Projets</h1>
+            <p>Voici la page dédiée à nos projets.</p>
+        </div>
+        <div id="controls">
+            <p>Choisissez les données à afficher :</p>
+            <button onclick="updatePlot('altitude')">Altitude</button>
+            <button onclick="updatePlot('temperature')">Température</button>
+            <button onclick="updatePlot('vitesse')">Vitesse</button>
+        </div>
+        <canvas id="canvas"></canvas>
+    </main>
+
+    <footer>
+        <div class="container">
+            <p>
+                <a href="about.html">À Propos</a> | 
+                <a href="projects.html">Nos Projets</a> | 
+                <a href="contact.html">Contact</a>
+            </p>
+        </div>
+    </footer>
+</body>
+</html>

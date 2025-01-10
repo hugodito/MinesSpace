@@ -45,16 +45,7 @@
       <button id="toggle-recording-button" class="recording-button recording-off">
         Enregistrer les données
       </button>
-      <p id="recording-status">Statut d'enregistrement: Inactif</p>
     </div>
-
-    <!-- Affichage des données -->
-    <h3>État des données en temps réel :</h3>
-    <p id="temperature-status">Température: Erreur</p>
-    <p id="pressure-status">Pression: Erreur</p>
-    <p id="acceleration-status">Accélération: Erreur</p>
-    <p id="speed-status">Vitesse: Erreur</p>
-    <p id="altitude-status">Altitude: Erreur</p>
   </div>
 </main>
 
@@ -83,68 +74,6 @@
       adminControls.style.display = 'none';   // Masquer les contrôles administrateurs si ce n'est pas un admin
     }
 
-    // Récupérer les éléments pour afficher les données
-    const temperatureStatus = document.getElementById('temperature-status');
-    const pressureStatus = document.getElementById('pressure-status');
-    const accelerationStatus = document.getElementById('acceleration-status');
-    const speedStatus = document.getElementById('speed-status');
-    const altitudeStatus = document.getElementById('altitude-status');
-    const recordingStatus = document.getElementById('recording-status');
-
-    // Fonction pour récupérer et afficher les données
-    async function fetchData() {
-      try {
-        const response = await fetch('/api/data');  // Appel à l'API côté serveur pour récupérer les données
-
-        // Vérifier que la réponse est valide
-        if (!response.ok) {
-          throw new Error(`Erreur API: ${response.status} - ${response.statusText}`);
-        }
-
-        const contentType = response.headers.get('Content-Type');
-
-        // Vérifier que la réponse est bien du JSON
-        if (!contentType || !contentType.includes('application/json')) {
-          throw new Error('Réponse API non valide. Attendu JSON.');
-        }
-
-        const data = await response.json();  // Supposons que la réponse est un tableau JSON
-
-        console.log('Données reçues de l\'API:', data);  // Affiche la réponse de l'API dans la console
-
-        // Mise à jour des éléments HTML avec les données de l'API
-        if (data && data.length > 0) {
-          const latestData = data[0];  // Récupérer la première entrée, la plus récente
-          temperatureStatus.textContent = `Température: ${latestData.temperature}°C`;
-          pressureStatus.textContent = `Pression: ${latestData.pression} hPa`;
-          accelerationStatus.textContent = `Accélération: ${latestData.acceleration} m/s²`;
-          speedStatus.textContent = `Vitesse: ${latestData.vitesse} km/h`;
-          altitudeStatus.textContent = `Altitude: ${latestData.altitude} m`;
-        } else {
-          temperatureStatus.textContent = `Température: Aucune donnée disponible`;
-          pressureStatus.textContent = `Pression: Aucune donnée disponible`;
-          accelerationStatus.textContent = `Accélération: Aucune donnée disponible`;
-          speedStatus.textContent = `Vitesse: Aucune donnée disponible`;
-          altitudeStatus.textContent = `Altitude: Aucune donnée disponible`;
-        }
-
-      } catch (error) {
-        console.error('Erreur API:', error);
-        // Si une erreur se produit, afficher un message d'erreur
-        temperatureStatus.textContent = `Température: Erreur - ${error.message}`;
-        pressureStatus.textContent = `Pression: Erreur - ${error.message}`;
-        accelerationStatus.textContent = `Accélération: Erreur - ${error.message}`;
-        speedStatus.textContent = `Vitesse: Erreur - ${error.message}`;
-        altitudeStatus.textContent = `Altitude: Erreur - ${error.message}`;
-      }
-    }
-
-    // Appeler la fonction pour récupérer les données immédiatement
-    fetchData();
-
-    // Fonction pour mettre à jour périodiquement les données toutes les 5 secondes
-    setInterval(fetchData, 500);  // Récupérer les données toutes les 0.5 secondes
-
     // Gestion du bouton d'enregistrement des données
     const toggleRecordingButton = document.getElementById('toggle-recording-button');
     let isRecording = false; // État initial
@@ -159,9 +88,6 @@
 
       toggleRecordingButton.classList.toggle('recording-on', isRecording);
       toggleRecordingButton.classList.toggle('recording-off', !isRecording);
-
-      // Mettre à jour le statut d'enregistrement
-      recordingStatus.textContent = isRecording ? 'Statut d\'enregistrement: Actif' : 'Statut d\'enregistrement: Inactif';
 
       // Appeler l'API pour mettre à jour l'état côté serveur
       try {

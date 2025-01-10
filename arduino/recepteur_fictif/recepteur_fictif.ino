@@ -1,59 +1,45 @@
 #include <Arduino.h>
-#include <DHT.h>
+#include <Wire.h>
+#include <SPI.h>
 
-// Define sensor type and pin
-#define DHTPIN 12  // Pin connected to the sensor
-#define DHTTYPE DHT22 // Change to DHT11 if using that model
 
-DHT dht(DHTPIN, DHTTYPE);
-
+int nombre = 24;
 int launch_id = 4;
 
 void setup() {
   Serial.begin(9600);
-  dht.begin(); // Initialize the sensor
+  
 }
 
 void loop() {
-  // Read temperature
-  float temperature = dht.readTemperature();
+  // Envoi des données sous forme de JSON
 
-  // Check if the reading is valid
-  if (isnan(temperature)) {
-    Serial.println("Failed to read temperature from DHT sensor!");
-    delay(2000);
-    return;
-  }
-
-  // Create JSON data
   String jsonData = "{";
 
-  jsonData += "\"temperature\":";
-  jsonData += String(temperature);
+  jsonData += "\"temperature\":" ;
+  jsonData += String(random(15,25));
   jsonData += ",";
 
-  jsonData += "\"pression\":";
-  jsonData += String(random(900, 1000)); // Replace with actual sensor data if available
+  jsonData += "\"pression\":" ;
+  jsonData += String(random(900,1000));
   jsonData += ",";
 
-  jsonData += "\"acceleration\":";
-  jsonData += String(random(0, 24)); // Replace with actual sensor data if available
+  jsonData += "\"acceleration\":" ;
+  jsonData += String(random(0,24));
   jsonData += ",";
 
-  jsonData += "\"vitesse\":";
-  jsonData += String(random(0, 50)); // Replace with actual sensor data if available
+  jsonData += "\"vitesse\":" ;
+  jsonData += String(random(0,50));
   jsonData += ",";
 
-  jsonData += "\"altitude\":";
-  jsonData += String(random(0, 2000)); // Replace with actual sensor data if available
+  jsonData += "\"altitude\":" ;
+  jsonData += String(random(0,2000));
   jsonData += ",";
 
-  jsonData += "\"launch_id\":";
+  jsonData += "\"launch_id\":" ;
   jsonData += String(launch_id);
   jsonData += "}";
 
-  // Send JSON over serial
   Serial.println(jsonData);
-
-  delay(1000); // Wait for 1 second
+  delay(1000);
 }

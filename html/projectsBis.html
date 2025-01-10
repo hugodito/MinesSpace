@@ -7,31 +7,17 @@
     <link rel="stylesheet" href="css/styles.css">
     <link rel="icon" type="image/png" href="images/favicon.png">
     <script src="js/scripts.js" defer></script>
-    <script src="js/projects.js" defer></script>
+    <script src="js/projectsBis.js" defer></script>
 </head>
 <body>
     <header>
-        <div class="header-container">
-            <!-- Logo cliquable qui mène à la page d'accueil -->
-            <a href="index.html">
-                <img src="images/navbar-logo.svg" alt="Logo" class="logo">
-            </a>
-    
-            <!-- Conteneur pour le bouton Live et le menu -->
-            <div class="menu-bar">
-                <!-- Bouton Live -->
-                <button id="live-button" onclick="window.location.href='live.html'">
-                    Live
-                </button>
-    
-                <!-- Menu Hamburger (trois barres) -->
-                <button class="hamburger-menu" id="hamburger-menu" onclick="toggleMenu()">
+        <div class="container">
+            <div class="menu">
+                <button class="menu-toggle">
                     <div class="bar"></div>
                     <div class="bar"></div>
                     <div class="bar"></div>
                 </button>
-    
-                <!-- Menu déroulant -->
                 <div id="menu-items" class="menu-items">
                     <a href="projects.html">Nos Projets</a>
                     <a href="about.html">À Propos</a>
@@ -42,12 +28,8 @@
         </div>
     </header>
 
-    <main>
-        <div class="container">
-            <h1>Nos Projets</h1>
-            <p>Voici la page dédiée à nos projets.</p>
-        </div>
-        <div id="launch-data-container"></div>
+    <main id="main-content">
+        <!-- Blank main block -->
     </main>
 
     <footer>
@@ -60,4 +42,48 @@
         </div>
     </footer>
 </body>
+
+<style>
+    .project-box {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.project-box:hover {
+    transform: scale(1.05);
+}
+
+canvas {
+    display: block;
+    margin: 0 auto;
+    background-color: white;
+    border: 1px solid black;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.project-button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin: 0 10px;
+}
+
+.project-button:hover {
+    background-color: #0056b3;
+}
+</style>
 </html>

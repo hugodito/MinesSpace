@@ -1,3 +1,4 @@
+// Importation des bibliothèques nécessaires
 import com.fazecast.jSerialComm.SerialPort;
 import com.fazecast.jSerialComm.SerialPortDataListener;
 import com.fazecast.jSerialComm.SerialPortEvent;
@@ -11,9 +12,11 @@ import java.util.Scanner;
 public class ArduinoSerialReader {
 
     public static void main(String[] args) {
+        // Initialisation du port série COM8 avec un taux de transmission de 9600 bauds
         SerialPort comPort = SerialPort.getCommPort("COM8");
         comPort.setBaudRate(9600);
 
+        // Ouverture du port série
         if (comPort.openPort()) {
             System.out.println("Port série ouvert avec succès.");
         } else {
@@ -23,52 +26,56 @@ public class ArduinoSerialReader {
 
         StringBuilder dataBuffer = new StringBuilder();
 
+        // Ajout d'un écouteur d'événements pour détecter les données disponibles
         comPort.addDataListener(new SerialPortDataListener() {
             @Override
             public int getListeningEvents() {
-                return SerialPort.LISTENING_EVENT_DATA_AVAILABLE;
+                return SerialPort.LISTENING_EVENT_DATA_AVAILABLE; // Écoute des données disponibles
             }
 
             @Override
             public void serialEvent(SerialPortEvent event) {
                 if (event.getEventType() != SerialPort.LISTENING_EVENT_DATA_AVAILABLE) return;
 
+                // Lecture des données disponibles dans le buffer
                 byte[] newData = new byte[comPort.bytesAvailable()];
                 comPort.readBytes(newData, newData.length);
                 dataBuffer.append(new String(newData));
 
-                // Vérifier si le buffer contient un JSON complet
+                // Vérification et extraction du JSON complet
                 String rawData = dataBuffer.toString();
-                int startIndex = rawData.indexOf('{'); // Trouver le début du JSON
-                int endIndex = rawData.lastIndexOf('}'); // Trouver la fin du JSON
+                int startIndex = rawData.indexOf('{'); // Début du JSON
+                int endIndex = rawData.lastIndexOf('}'); // Fin du JSON
 
+                // Si un JSON complet est trouvé, on le traite
                 if (startIndex != -1 && endIndex != -1 && endIndex > startIndex) {
-                    String jsonString = rawData.substring(startIndex, endIndex + 1); // Extraire le JSON
-                    dataBuffer.setLength(0); // Vider le buffer après extraction
+                    String jsonString = rawData.substring(startIndex, endIndex + 1);
+                    dataBuffer.setLength(0); // Vidage du buffer
 
                     System.out.println("Données complètes reçues : " + jsonString);
 
-                    // Traiter le JSON extrait
+                    // Traitement du JSON reçu
                     try {
                         JSONObject jsonReceived = new JSONObject(jsonString);
 
+                        // Extraction des données du JSON
                         int temperature = jsonReceived.getInt("temperature");
                         double pression = jsonReceived.getDouble("pression");
                         double acceleration = jsonReceived.getDouble("acceleration");
                         int vitesse = jsonReceived.getInt("vitesse");
                         int altitude = jsonReceived.getInt("altitude");
 
-                        // Construire un JSON pour l'envoi
+                        // Construction d'un JSON pour l'envoi
                         String jsonData = new JSONObject()
                                 .put("temperature", temperature)
                                 .put("pression", pression)
                                 .put("acceleration", acceleration)
                                 .put("vitesse", vitesse)
                                 .put("altitude", altitude)
-                                .put("launch_id", 4) // Ajoutez un launch_id par défaut ou configurable
+                                .put("launch_id", 4) // Identifiant de lancement (statique dans ce cas)
                                 .toString();
 
-                        // Envoyer au serveur
+                        // Envoi des données au serveur
                         sendToServer(jsonData);
 
                     } catch (Exception e) {
@@ -79,6 +86,7 @@ public class ArduinoSerialReader {
             }
         });
 
+        // Fermeture propre du port lors de l'arrêt du programme
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             comPort.closePort();
             System.out.println("Port série fermé proprement.");
@@ -86,25 +94,27 @@ public class ArduinoSerialReader {
 
         System.out.println("Le programme fonctionne indéfiniment. Appuyez sur Ctrl+C pour arrêter.");
 
-        // ✅ Ajouter une boucle infinie pour empêcher l'arrêt du programme
+        // Boucle infinie pour maintenir le programme actif
         while (true) {
             try {
-                Thread.sleep(1000); // Pause pour réduire l'utilisation du CPU
+                Thread.sleep(1000); // Pause pour limiter l'utilisation du CPU
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
     }
 
+    // Fonction d'envoi des données au serveur
     private static void sendToServer(String jsonData) {
         try {
+            // Vérification de l'état d'enregistrement via une requête GET
             URL statusUrl = new URL("http://localhost:3000/api/recording/status");
             HttpURLConnection statusConn = (HttpURLConnection) statusUrl.openConnection();
             statusConn.setRequestMethod("GET");
             int statusResponseCode = statusConn.getResponseCode();
 
             if (statusResponseCode == 200) {
-                // Lire la réponse pour vérifier l'état d'enregistrement
+                // Vérification de la réponse pour savoir si l'enregistrement est actif
                 Scanner scanner = new Scanner(statusConn.getInputStream());
                 String jsonResponse = scanner.nextLine();
                 scanner.close();
@@ -114,10 +124,11 @@ public class ArduinoSerialReader {
 
                 if (!isRecording) {
                     System.out.println("Enregistrement désactivé. Données ignorées.");
-                    return; // Arrêter ici si l'enregistrement est désactivé
+                    return; // Si l'enregistrement est désactivé, ne pas envoyer les données
                 }
             }
 
+            // Envoi des données au serveur via une requête POST
             URL url = new URL("http://localhost:3000/api/data");
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
             conn.setRequestMethod("POST");
@@ -129,6 +140,7 @@ public class ArduinoSerialReader {
                 os.write(input, 0, input.length);
             }
 
+            // Vérification de la réponse du serveur
             int responseCode = conn.getResponseCode();
             System.out.println("Réponse du serveur : " + responseCode);
 

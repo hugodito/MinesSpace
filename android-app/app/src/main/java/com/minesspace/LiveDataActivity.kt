@@ -1,9 +1,6 @@
 package com.minesspace
 
 import android.os.Bundle
-import android.view.View
-import android.view.Window
-import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.background
@@ -12,7 +9,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -31,44 +28,48 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
+// Activité principale pour afficher les données en temps réel d'un lancement
 class LiveDataActivity : ComponentActivity() {
-    private val apiUrl = "http://10.0.2.2:3000/api/data" // URL API pour récupérer les données
+    private val apiUrl = "http://10.0.2.2:3000/api/data" // URL pour récupérer les données
     private val client = OkHttpClient()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val launchId = intent.getIntExtra("launch_id", -1)
+        val launchId = intent.getIntExtra("launch_id", -1) // Récupération de l'ID du lancement
 
         setContent {
+            // Si l'ID du lancement est valide, afficher les données en temps réel
             if (launchId != -1) {
                 LiveDataScreen(fetchLiveData = { fetchLiveData(launchId) }, launchId = launchId)
             }
         }
     }
 
+    // Fonction pour récupérer les données du serveur
     private suspend fun fetchLiveData(launchId: Int): List<LiveDataItem> {
         return withContext(Dispatchers.IO) {
             try {
                 val request = Request.Builder()
-                    .url("$apiUrl?launch_id=$launchId") // Ajout du launch_id dans l'URL pour filtrer les données
+                    .url("$apiUrl?launch_id=$launchId") // Filtre par ID du lancement
                     .build()
                 val response = client.newCall(request).execute()
                 val responseData = response.peekBody(Long.MAX_VALUE).string()
 
                 if (response.isSuccessful) {
                     val dataList = parseJson(responseData, launchId)
-                    // Trier les données par date, de la plus récente à la plus vieille
-                    dataList.sortedByDescending { it.timestamp.toLong() }                } else {
+                    // Trier les données par date (de la plus récente à la plus ancienne)
+                    dataList.sortedByDescending { it.timestamp.toLong() }
+                } else {
                     emptyList()
                 }
             } catch (e: Exception) {
-                emptyList()
+                emptyList() // En cas d'erreur, retourner une liste vide
             }
         }
     }
 
-    // Filtrer les données en fonction du launch_id
+    // Parse le JSON en fonction de l'ID du lancement
     private fun parseJson(responseData: String, launchId: Int): List<LiveDataItem> {
         val jsonArray = JSONArray(responseData)
         val dataList = mutableListOf<LiveDataItem>()
@@ -77,7 +78,7 @@ class LiveDataActivity : ComponentActivity() {
             val item = jsonArray.getJSONObject(i)
             val itemLaunchId = item.optInt("launch_id")
 
-            // Ne récupérer que les données correspondant au launch_id
+            // Ajouter les données correspondant à l'ID du lancement
             if (itemLaunchId == launchId) {
                 val liveDataItem = LiveDataItem(
                     timestamp = item.optString("timestamp"),
@@ -96,7 +97,7 @@ class LiveDataActivity : ComponentActivity() {
     }
 }
 
-
+// Modèle représentant les données d'un lancement
 data class LiveDataItem(
     val timestamp: String,
     val temperature: String,
@@ -107,6 +108,7 @@ data class LiveDataItem(
     val launchId: Int
 )
 
+// Fonction pour formater le timestamp en date/heure
 fun formatTimestampToDateTime(timestamp: String): String {
     return try {
         val milliseconds = timestamp.toLong()
@@ -114,10 +116,11 @@ fun formatTimestampToDateTime(timestamp: String): String {
         val format = SimpleDateFormat("dd/MM/yyyy HH:mm:ss", Locale.getDefault())
         format.format(date)
     } catch (e: Exception) {
-        "Invalid timestamp"
+        "Invalid timestamp" // Si le format est incorrect, retourner une chaîne par défaut
     }
 }
 
+// Composant principal pour afficher les données en temps réel
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LiveDataScreen(fetchLiveData: suspend () -> List<LiveDataItem>, launchId: Int) {
@@ -125,7 +128,7 @@ fun LiveDataScreen(fetchLiveData: suspend () -> List<LiveDataItem>, launchId: In
     var errorMessage by remember { mutableStateOf<String?>(null) }
     val context = LocalContext.current
 
-    // Mise à jour en temps réel avec un intervalle
+    // Mise à jour en temps réel toutes les 5 secondes
     LaunchedEffect(Unit) {
         while (true) {
             try {
@@ -138,13 +141,14 @@ fun LiveDataScreen(fetchLiveData: suspend () -> List<LiveDataItem>, launchId: In
         }
     }
 
+    // Structure de l'écran
     Scaffold(
         topBar = {
             TopAppBar(
-                title = { Text("Données du lancer $launchId") }, // Affichage du launch_id dans le titre
+                title = { Text("Données du lancer $launchId") }, // Affichage de l'ID du lancement
                 navigationIcon = {
                     IconButton(onClick = { (context as? LiveDataActivity)?.finish() }) {
-                        Icon(Icons.Default.ArrowBack, contentDescription = "Back")
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, contentDescription = "Back")
                     }
                 }
             )
@@ -157,12 +161,13 @@ fun LiveDataScreen(fetchLiveData: suspend () -> List<LiveDataItem>, launchId: In
                 .padding(16.dp),
             horizontalAlignment = Alignment.CenterHorizontally
         ) {
+            // Afficher un message d'erreur ou d'absence de données
             if (errorMessage != null) {
                 Text(text = errorMessage ?: "", color = MaterialTheme.colorScheme.error)
             } else if (liveData.isEmpty()) {
                 Text(text = "Aucune donnée disponible pour le moment.")
             } else {
-                // Afficher les données sous forme de tableau
+                // Affichage des données sous forme de tableau
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -181,10 +186,10 @@ fun LiveDataScreen(fetchLiveData: suspend () -> List<LiveDataItem>, launchId: In
                         Text("Vitesse (m/s)", modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
                     }
 
-                    // Séparateur
-                    Divider(modifier = Modifier.padding(vertical = 8.dp))
+                    // Séparateur entre les légendes et les données
+                    HorizontalDivider(modifier = Modifier.padding(vertical = 8.dp))
 
-                    // Lignes du tableau
+                    // Affichage des lignes de données
                     LazyColumn(
                         modifier = Modifier.fillMaxWidth(),
                         verticalArrangement = Arrangement.spacedBy(4.dp)
@@ -199,11 +204,9 @@ fun LiveDataScreen(fetchLiveData: suspend () -> List<LiveDataItem>, launchId: In
     }
 }
 
+// Composant pour afficher une ligne de données
 @Composable
 fun LiveDataRow(item: LiveDataItem) {
-    val formattedDate = formatTimestampToDateTime(item.timestamp)
-
-    // Créer un tableau avec une ligne pour chaque donnée
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -213,6 +216,7 @@ fun LiveDataRow(item: LiveDataItem) {
         horizontalArrangement = Arrangement.SpaceEvenly,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        // Affichage des données dans chaque colonne
         Text(formatTimestampToDateTime(item.timestamp), modifier = Modifier.weight(1.5f), textAlign = TextAlign.Center)
         Text(item.temperature, modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
         Text(item.pressure, modifier = Modifier.weight(1f), textAlign = TextAlign.Center)
@@ -222,6 +226,7 @@ fun LiveDataRow(item: LiveDataItem) {
     }
 }
 
+// Aperçu pour la prévisualisation dans Android Studio
 @Preview(showBackground = true)
 @Composable
 fun LiveDataPreview() {

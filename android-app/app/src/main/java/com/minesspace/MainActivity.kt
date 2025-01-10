@@ -22,59 +22,54 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.sp
 import com.minesspace.ui.theme.MinesSpaceTheme
 
+// Activité principale de l'application
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        // Cacher la barre supérieure (ActionBar)
+        // Configuration de l'écran plein format (sans barre de titre ni barre de navigation)
         window.requestFeature(Window.FEATURE_NO_TITLE)
         window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)
-
-        // Cacher la barre inférieure (NavigationBar)
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
 
         setContent {
             MinesSpaceTheme {
-                // App UI
-                MainScreen()
+                MainScreen() // Affichage de l'écran principal
             }
         }
     }
 }
 
-
+// Interface de l'écran principal
 @Composable
 fun MainScreen() {
-    val context = LocalContext.current
+    val context = LocalContext.current // Récupère le contexte pour la navigation
 
-    // Modifier pour centrer le contenu
     Column(
         modifier = Modifier
             .fillMaxSize()
             .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Top // Le logo est en haut
+        verticalArrangement = Arrangement.Top
     ) {
-        Spacer(modifier = Modifier.height(50.dp))
-        // Logo
+        Spacer(modifier = Modifier.height(50.dp)) // Espacement entre le haut et le logo
+
+        // Affichage du logo
         val logo = painterResource(id = R.drawable.logo_minesspace)
         Image(painter = logo, contentDescription = "Logo MinesSpace", modifier = Modifier.fillMaxWidth().height(300.dp))
 
-        // Espacement entre le logo et le texte/bouton
-        Spacer(modifier = Modifier.height(50.dp)) // Espacement pour centrer les autres éléments
+        Spacer(modifier = Modifier.height(50.dp)) // Espacement avant le texte
 
         // Texte de bienvenue
         Text(
             text = "Bienvenue sur l'application Mines Space, où vous pouvez retrouver les données de nos lancers",
-            fontSize = 18.sp, // Taille du texte
+            fontSize = 18.sp,
             color = Color.Black,
-            modifier = Modifier.padding(horizontal = 16.dp),
-            style = androidx.compose.material3.MaterialTheme.typography.bodyLarge
+            modifier = Modifier.padding(horizontal = 16.dp)
         )
 
-        // Espacement entre le texte et le bouton
-        Spacer(modifier = Modifier.height(40.dp))
+        Spacer(modifier = Modifier.height(40.dp)) // Espacement avant le bouton
 
-        // Bouton
+        // Bouton pour accéder à l'écran de sélection des lancers
         Button(
             onClick = {
                 val intent = Intent(context, LaunchSelectionActivity::class.java)
@@ -84,21 +79,16 @@ fun MainScreen() {
                 .fillMaxWidth()
                 .padding(horizontal = 40.dp),
             content = {
-                Text(text = "Accéder aux lancers", color = Color.White, fontSize = 20.sp) // Texte plus grand
+                Text(text = "Accéder aux lancers", color = Color.White, fontSize = 20.sp)
             },
-            colors = androidx.compose.material3.ButtonDefaults.buttonColors(
-                containerColor = Color.Red
-            )
+            colors = androidx.compose.material3.ButtonDefaults.buttonColors(containerColor = Color.Red)
         )
 
-        // Espacement en bas pour centrer l'ensemble
-        Spacer(modifier = Modifier.weight(1f)) // Espacement pour centrer les éléments
+        Spacer(modifier = Modifier.weight(1f)) // Espacement pour centrer le contenu
     }
 }
 
-
-
-
+// Prévisualisation de l'interface dans l'éditeur
 @Preview(showBackground = true)
 @Composable
 fun MainPreview() {

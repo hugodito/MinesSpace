@@ -20,7 +20,7 @@
   {"timestamp": 1703035800, "altitude": 3175, "temperature": 3, "launch_id": 2},
   {"timestamp": 1703036100, "altitude": 3220, "temperature": 2, "launch_id": 2},
   {"timestamp": 1703036400, "altitude": 2864, "temperature": 4, "launch_id": 2},
-  {"timestamp": 1703036700, "altitude": 3223, "temperature": 18, "launch_id": 2},
+  {"timestamp": 1703036700, "altitude": 3223, "temperature": 180, "launch_id": 2},
   {"timestamp": 1703037000, "altitude": 3050, "temperature": -8, "launch_id": 2},
   {"timestamp": 1703037300, "altitude": 3303, "temperature": 3, "launch_id": 2},
   {"timestamp": 1703037600, "altitude": 3456, "temperature": -12, "launch_id": 2},

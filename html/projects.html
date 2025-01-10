@@ -42,12 +42,8 @@
         </div>
     </header>
 
-    <main>
-        <div class="container">
-            <h1>Nos Projets</h1>
-            <p>Voici la page dédiée à nos projets.</p>
-        </div>
-        <div id="launch-data-container"></div>
+    <main id="main-content">
+        <!-- Blank main block -->
     </main>
 
     <footer>
@@ -60,4 +56,45 @@
         </div>
     </footer>
 </body>
+
+<style>
+    .project-box {
+    border: 1px solid #ccc;
+    padding: 20px;
+    margin-bottom: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+canvas {
+    display: block;
+    margin: 0 auto;
+    background-color: white;
+    border: 1px solid black;
+}
+
+.button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 10px;
+}
+
+.project-button {
+    padding: 10px 20px;
+    border: none;
+    background-color: #007BFF;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin: 0 10px;
+}
+
+.project-button:hover {
+    background-color: #0056b3;
+}
+</style>
+
 </html>

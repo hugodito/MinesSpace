@@ -64,7 +64,7 @@ fun MainScreen() {
 
         // Texte de bienvenue
         Text(
-            text = "Bienvenue sur l'application Mines Space, où vous pouvez suivre tous nos lancers en direct",
+            text = "Bienvenue sur l'application Mines Space, où vous pouvez retrouver les données de nos lancers",
             fontSize = 18.sp, // Taille du texte
             color = Color.Black,
             modifier = Modifier.padding(horizontal = 16.dp),
@@ -77,14 +77,14 @@ fun MainScreen() {
         // Bouton
         Button(
             onClick = {
-                val intent = Intent(context, LiveDataActivity::class.java)
+                val intent = Intent(context, LaunchSelectionActivity::class.java)
                 context.startActivity(intent)
             },
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 40.dp),
             content = {
-                Text(text = "Accéder au live", color = Color.White, fontSize = 20.sp) // Texte plus grand
+                Text(text = "Accéder aux lancers", color = Color.White, fontSize = 20.sp) // Texte plus grand
             },
             colors = androidx.compose.material3.ButtonDefaults.buttonColors(
                 containerColor = Color.Red
